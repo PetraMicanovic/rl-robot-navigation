@@ -216,3 +216,24 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Trained models (Stable-Baselines3 saves as .zip, can be large)
+models/
+*.zip
+
+# Training logs (TensorBoard)
+logs/
+tensorboard_logs/
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+*.ipynb
+
+# Experiment results
+results/
+*.csv
+*.png
+
+# Virtual environment
+venv/
+.env
