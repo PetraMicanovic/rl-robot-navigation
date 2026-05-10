@@ -47,5 +47,6 @@ cd rl-robot-navigation
 pip install -r requirements.txt
 ```
 
-**Requirements:** Python 3.10+, see `requirements.txt` for full list.
+**Requirements:** 
+- Python 3.10+, see `requirements.txt` for full list.
 ---
