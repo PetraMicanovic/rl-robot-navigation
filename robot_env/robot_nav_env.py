@@ -591,16 +591,15 @@ class RobotNavEnv(gym.Env):
     def close(self):
         """
         Clean up resources when the environment is no longer needed.
-
         Shuts down the pygame display if it was initialized.
 
         Parameters
         None
         """
-        if self._renderer is not None:
+        if self.renderer is not None:
             try:
                 import pygame
                 pygame.quit()
             except Exception:
                 pass
-            self._renderer = None
+            self.renderer = None
