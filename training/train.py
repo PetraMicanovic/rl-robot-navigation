@@ -1,0 +1,91 @@
+"""
+Training module for the PPO agent in RobotNavEnv.
+Loads configuration from config.json, creates training and evaluation environments, initializes the PPO agent, runs training and saves trained model.
+"""
+import os
+import json
+
+from robot_env.env_factory import create_parallel_envs, create_eval_env
+from training.agent import build_ppo_agent
+from training.callbacks import build_callbacks
+
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "config.json")
+
+
+def load_config(config_path):
+    """
+    Load configuration from a JSON file.
+
+    Parameters
+    config_path: str
+        Path to the JSON configuration file.
+
+    Returns
+    dict
+        Full configuration dictionary.
+    """
+    with open(config_path, "r") as config_file:
+        config = json.load(config_file)
+    return config
+
+def train(n_dynamic_obstacles=None, obstacle_speed=None):
+    """
+    Main training pipeline.
+
+    Loads config, creates environments and agent, runs training,
+    and saves the final model.
+
+    Parameters
+    n_dynamic_obstacles: int or None
+        Number of dynamic obstacles.
+    obstacle_speed: float or None
+        Speed of dynamic obstacles.
+    """
+    config = load_config(CONFIG_PATH)
+
+    # Apply overrides or use config defaults
+    if n_dynamic_obstacles is None:
+        n_dynamic_obstacles = config["environment"]["n_dynamic_obstacles"]
+    if obstacle_speed is None:
+        obstacle_speed = config["environment"]["obstacle_speed"]
+
+    model_dir = config["paths"]["model_dir"]
+    log_dir = config["paths"]["log_dir"]
+    os.makedirs(model_dir, exist_ok=True)
+    os.makedirs(log_dir, exist_ok=True)
+
+    print("PPO Training — RobotNavEnv")
+    print(f"Dynamic obstacles: {n_dynamic_obstacles}")
+    print(f"Obstacle speed: {obstacle_speed}")
+    print(f"Total timesteps: {config['training']['total_timesteps']:,}")
+    print(f"Parallel envs: {config['training']['n_envs']}")
+    print(f"Model output: {model_dir}")
+    print(f"TensorBoard logs: {log_dir}")
+    print("=" * 55)
+    print()
+
+    # Create training and evaluation environments
+    training_env = create_parallel_envs(config, CONFIG_PATH, n_dynamic_obstacles, obstacle_speed)
+    eval_env = create_eval_env(CONFIG_PATH, n_dynamic_obstacles, obstacle_speed)
+
+    # Build PPO agent and callbacks
+    agent = build_ppo_agent(config, training_env, log_dir)
+    callbacks = build_callbacks(config, eval_env, n_dynamic_obstacles, obstacle_speed)
+
+    # Run training
+    print("Starting training...")
+    agent.learn(
+        total_timesteps=config["training"]["total_timesteps"],
+        callback=callbacks,
+        progress_bar=True
+    )
+
+    # Save final model
+    experiment_suffix = f"obs{n_dynamic_obstacles}_spd{obstacle_speed}"
+    final_model_path = os.path.join(model_dir, f"ppo_robot_nav_{experiment_suffix}")
+    agent.save(final_model_path)
+    print()
+    print(f"Training complete. Model saved to: {final_model_path}.zip")
+
+    training_env.close()
+    eval_env.close()
