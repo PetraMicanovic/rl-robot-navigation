@@ -3,15 +3,12 @@ import numpy as np
 import sys
 import os
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-
 from robot_env.robot_nav_env import RobotNavEnv
-
 
 def main():
     # Create environment with visualization enabled
     env = RobotNavEnv(
-        config_path=os.path.join(os.path.dirname(__file__), "..", "config.json"),
+        config_path=os.path.join(os.path.dirname(__file__), "config.json"),
         n_dynamic_obstacles=3,
         render_mode="human",
     )
