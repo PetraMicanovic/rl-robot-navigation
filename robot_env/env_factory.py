@@ -4,7 +4,7 @@ This module contains factory functions used to create vectorized training enviro
 """
 import os
 
-from stable_baselines3.common.vec_env import SubprocVecEnv, VecMonitor
+from stable_baselines3.common.vec_env import SubprocVecEnv, VecMonitor, DummyVecEnv
 from robot_env.robot_nav_env import RobotNavEnv
 
 
@@ -89,13 +89,15 @@ def create_eval_env(config_path, n_dynamic_obstacles, obstacle_speed):
         Speed of dynamic obstacles.
 
     Returns
-    RobotNavEnv
-        A single non-rendered environment instance for evaluation.
+    VecMonitor
+        Vectorized and monitored single environment instance for evaluation.
     """
-    eval_env = RobotNavEnv(
+    env_factory = make_env(
         config_path=config_path,
         n_dynamic_obstacles=n_dynamic_obstacles,
         obstacle_speed=obstacle_speed,
-        render_mode=None
+        rank=0
     )
-    return eval_env
+    eval_env = DummyVecEnv([env_factory])
+    
+    return VecMonitor(eval_env)
