@@ -8,6 +8,7 @@ import json
 from robot_env.env_factory import create_parallel_envs, create_eval_env
 from training.agent import build_ppo_agent
 from training.callbacks import build_callbacks
+from stable_baselines3 import PPO
 
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "config.json")
 
@@ -28,7 +29,7 @@ def load_config(config_path):
         config = json.load(config_file)
     return config
 
-def train(n_dynamic_obstacles=None, obstacle_speed=None):
+def train(n_dynamic_obstacles=None, obstacle_speed=None, pretrained_model_path=None):
     """
     Main training pipeline.
 
@@ -40,6 +41,8 @@ def train(n_dynamic_obstacles=None, obstacle_speed=None):
         Number of dynamic obstacles.
     obstacle_speed: float or None
         Speed of dynamic obstacles.
+    pretrained_model_path: str
+        Path to a pretrained PPO model. If provided, training continues from the loaded model.
     """
     config = load_config(CONFIG_PATH)
 
@@ -61,15 +64,21 @@ def train(n_dynamic_obstacles=None, obstacle_speed=None):
     print(f"Parallel envs: {config['training']['n_envs']}")
     print(f"Model output: {model_dir}")
     print(f"TensorBoard logs: {log_dir}")
-    print("=" * 55)
     print()
 
     # Create training and evaluation environments
     training_env = create_parallel_envs(config, CONFIG_PATH, n_dynamic_obstacles, obstacle_speed)
     eval_env = create_eval_env(CONFIG_PATH, n_dynamic_obstacles, obstacle_speed)
 
-    # Build PPO agent and callbacks
-    agent = build_ppo_agent(config, training_env, log_dir)
+    # Create a new PPO agent or load a pretrained one
+    if pretrained_model_path is None:
+        agent = build_ppo_agent(config, training_env, log_dir)
+    else:
+        if not os.path.exists(pretrained_model_path):
+            raise FileNotFoundError(f"Pretrained model not found: {pretrained_model_path}")
+        print(f"Loading pretrained model from: {pretrained_model_path}")
+        agent = PPO.load(pretrained_model_path, env=training_env, tensorboard_log=log_dir)
+
     callbacks = build_callbacks(config, eval_env, n_dynamic_obstacles, obstacle_speed)
 
     # Run training
