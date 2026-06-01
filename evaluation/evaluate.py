@@ -1,6 +1,6 @@
 """
 Evaluation module for a trained PPO agent in RobotNavEnv.
-Loads a trained model and runs it for a fixed number of episodes, collecting metrics: success rate, average episode length and average number of collisions per episode.
+Loads a trained model, evaluates it over a fixed number of episodes, collects aggregate and per-episode metrics and saves evaluation results to a JSON file.
 """
 
 import os
@@ -54,6 +54,7 @@ def evaluate(model_path, n_dynamic_obstacles=None, obstacle_speed=None, n_eval_e
         - 'n_collision'(int): number of episodes ending in collision
         - 'n_truncated'(int): number of truncated episodes
         - 'n_episodes'(int): total episodes evaluated
+        - 'episodes'(list): detailed per-episode evaluation results
     """
     config = load_config(CONFIG_PATH)
 
@@ -98,7 +99,7 @@ def evaluate(model_path, n_dynamic_obstacles=None, obstacle_speed=None, n_eval_e
     total_steps = 0
     total_collisions = 0
 
-    # Per-episode results for detailed output
+    # Per-episode metrics for JSON export and analysis
     episode_results = []
 
     for episode_index in range(n_eval_episodes):
@@ -160,20 +161,29 @@ def evaluate(model_path, n_dynamic_obstacles=None, obstacle_speed=None, n_eval_e
         "n_success": number_of_successes,
         "n_collision": number_of_collisions,
         "n_truncated": number_of_truncations,
-        "n_episodes": n_eval_episodes
+        "n_episodes": n_eval_episodes,
+        "episodes": episode_results
     }
 
     # Print summary 
     print()
     print("Evaluation Results")
     print(f"Episodes evaluated: {n_eval_episodes}")
-    print(f"Successful: {number_of_successes}"
-          f"({success_rate * 100:.1f}%)")
-    print(f"Collisions: {number_of_collisions}"
-          f"({number_of_collisions / n_eval_episodes * 100:.1f}%)")
-    print(f"Truncated: {number_of_truncations}"
-          f"({number_of_truncations / n_eval_episodes * 100:.1f}%)")
+    print(f"Successful: {number_of_successes} ({success_rate * 100:.1f}%)")
+    print(f"Collisions: {number_of_collisions} ({number_of_collisions / n_eval_episodes * 100:.1f}%)")
+    print(f"Truncated: {number_of_truncations} ({number_of_truncations / n_eval_episodes * 100:.1f}%)")
     print(f"Average episode length: {avg_episode_length:.1f} steps")
     print(f"Average collisions/episode: {avg_collision_count:.3f}")
 
+    # Save evaluation results to JSON file
+    results_dir = os.path.join(os.path.dirname(__file__), "..", "results")
+    os.makedirs(results_dir, exist_ok=True)
+    
+    results_filename = f"eval_obs{n_dynamic_obstacles}_spd{obstacle_speed}.json"
+    results_path = os.path.join(results_dir, results_filename)
+    
+    with open(results_path, "w", encoding="utf-8") as results_file:        
+        json.dump(results, results_file, indent=4, ensure_ascii=False)    
+    print(f"Results saved to: {results_path}")
+    
     return results
