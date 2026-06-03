@@ -29,7 +29,7 @@ def load_config(config_path):
         config = json.load(config_file)
     return config
 
-def train(n_dynamic_obstacles=None, obstacle_speed=None, pretrained_model_path=None):
+def train(n_dynamic_obstacles=None, obstacle_speed=None, pretrained_model_path=None, use_reward_shaping = True):
     """
     Main training pipeline.
 
@@ -43,6 +43,9 @@ def train(n_dynamic_obstacles=None, obstacle_speed=None, pretrained_model_path=N
         Speed of dynamic obstacles.
     pretrained_model_path: str
         Path to a pretrained PPO model. If provided, training continues from the loaded model.
+    use_reward_shaping: bool
+        If True, adds progress reward toward the target.
+        If False, only goal, collision and step penalty rewards are used.
     """
     config = load_config(CONFIG_PATH)
 
@@ -64,11 +67,12 @@ def train(n_dynamic_obstacles=None, obstacle_speed=None, pretrained_model_path=N
     print(f"Parallel envs: {config['training']['n_envs']}")
     print(f"Model output: {model_dir}")
     print(f"TensorBoard logs: {log_dir}")
+    print(f"Reward shaping: {use_reward_shaping}")
     print()
 
     # Create training and evaluation environments
-    training_env = create_parallel_envs(config, CONFIG_PATH, n_dynamic_obstacles, obstacle_speed)
-    eval_env = create_eval_env(CONFIG_PATH, n_dynamic_obstacles, obstacle_speed)
+    training_env = create_parallel_envs(config, CONFIG_PATH, n_dynamic_obstacles, obstacle_speed, use_reward_shaping)
+    eval_env = create_eval_env(CONFIG_PATH, n_dynamic_obstacles, obstacle_speed, use_reward_shaping)
 
     # Create a new PPO agent or load a pretrained one
     if pretrained_model_path is None:
