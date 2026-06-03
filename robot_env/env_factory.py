@@ -43,7 +43,7 @@ def make_env(config_path, n_dynamic_obstacles, obstacle_speed, rank, seed=0):
     return environment_factory
 
 
-def create_parallel_envs(config, config_path, n_dynamic_obstacles, obstacle_speed):
+def create_parallel_envs(config, config_path, n_dynamic_obstacles, obstacle_speed, use_reward_shaping = True):
     """
     Create a vectorized environment with multiple parallel instances.
     Wraps SubprocVecEnv with VecMonitor to record episode rewards and lengths for TensorBoard monitoring.
@@ -57,6 +57,9 @@ def create_parallel_envs(config, config_path, n_dynamic_obstacles, obstacle_spee
         Number of dynamic obstacles in each environment.
     obstacle_speed: float
         Speed of dynamic obstacles in each environment.
+    use_reward_shaping: bool
+        If True, adds progress reward toward the target.
+        If False, only goal, collision and step penalty rewards are used.
 
     Returns
     VecMonitor
@@ -68,7 +71,7 @@ def create_parallel_envs(config, config_path, n_dynamic_obstacles, obstacle_spee
 
     env_factory_list = []
     for i in range(number_of_envs):
-        env_factory_list.append(make_env(config_path, n_dynamic_obstacles, obstacle_speed, rank=i))
+        env_factory_list.append(make_env(config_path, n_dynamic_obstacles, obstacle_speed, rank=i, use_reward_shaping = use_reward_shaping))
 
     parallel_env = SubprocVecEnv(env_factory_list)
     monitored_env = VecMonitor(parallel_env, filename=os.path.join(log_dir, "monitor"))
@@ -76,7 +79,7 @@ def create_parallel_envs(config, config_path, n_dynamic_obstacles, obstacle_spee
     return monitored_env
 
 
-def create_eval_env(config_path, n_dynamic_obstacles, obstacle_speed):
+def create_eval_env(config_path, n_dynamic_obstacles, obstacle_speed, use_reward_shaping = True):
     """
     Create a single environment used for periodic evaluation during training.
 
@@ -87,6 +90,9 @@ def create_eval_env(config_path, n_dynamic_obstacles, obstacle_speed):
         Number of dynamic obstacles.
     obstacle_speed: float
         Speed of dynamic obstacles.
+    use_reward_shaping: bool
+        If True, adds progress reward toward the target.
+        If False, only goal, collision and step penalty rewards are used.
 
     Returns
     VecMonitor
@@ -96,7 +102,8 @@ def create_eval_env(config_path, n_dynamic_obstacles, obstacle_speed):
         config_path=config_path,
         n_dynamic_obstacles=n_dynamic_obstacles,
         obstacle_speed=obstacle_speed,
-        rank=0
+        rank=0,
+        use_reward_shaping=use_reward_shaping
     )
     eval_env = DummyVecEnv([env_factory])
     
