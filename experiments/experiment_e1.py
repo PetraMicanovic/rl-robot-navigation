@@ -30,5 +30,6 @@ def run_e1():
             model_path=f"models/ppo_robot_nav_obs{n_obstacles}_spd1.0",
             n_dynamic_obstacles=n_obstacles,
             obstacle_speed=1.0,
-            n_eval_episodes=200
+            n_eval_episodes=200,
+            experiment="e1"
         )
