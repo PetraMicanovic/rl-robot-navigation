@@ -8,7 +8,7 @@ from stable_baselines3.common.vec_env import SubprocVecEnv, VecMonitor, DummyVec
 from robot_env.robot_nav_env import RobotNavEnv
 
 
-def make_env(config_path, n_dynamic_obstacles, obstacle_speed, rank, seed=0):
+def make_env(config_path, n_dynamic_obstacles, obstacle_speed, rank, seed=0, use_reward_shaping = True):
     """
     Factory function used by SubprocVecEnv to create parallel RobotNavEnv instances.
     Each environment receives a different random seed.
@@ -24,6 +24,9 @@ def make_env(config_path, n_dynamic_obstacles, obstacle_speed, rank, seed=0):
         Index of this environment in the parallel pool (used for seeding).
     seed: int
         Base random seed. Each environment gets seed + rank.
+    use_reward_shaping: bool
+        If True, adds progress reward toward the target.
+        If False, only goal, collision and step penalty rewards are used.
 
     Returns
     callable
@@ -35,7 +38,8 @@ def make_env(config_path, n_dynamic_obstacles, obstacle_speed, rank, seed=0):
             config_path=config_path,
             n_dynamic_obstacles=n_dynamic_obstacles,
             obstacle_speed=obstacle_speed,
-            render_mode=None
+            render_mode=None,
+            use_reward_shaping=use_reward_shaping
         )
         env.reset(seed=seed + rank)
         return env
