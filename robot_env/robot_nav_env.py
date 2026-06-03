@@ -142,16 +142,21 @@ class RobotNavEnv(gym.Env):
         self.agent_velocity = np.zeros(2, dtype=np.float32)
 
         excluded = [self.agent_position, self.target_position]
-        self.obstacle_positions = []
+        obstacle_list = []
         for _ in range(self.n_dynamic_obstacles):
-            self.obstacle_positions.append(self._random_free_position(exclude=excluded, min_dist=1.5))
-    
+            obstacle_list.append(self._random_free_position(exclude=excluded, min_dist=1.5))
+
+        self.obstacle_positions = np.array(obstacle_list, dtype=np.float32).reshape(-1, 2)
+
         # Assign random initial directions to dynamic obstacles
         random_angles = self.np_random.uniform(0, 2 * np.pi, self.n_dynamic_obstacles)
         velocity_x = np.cos(random_angles) * self.obstacle_speed
         velocity_y = np.sin(random_angles) * self.obstacle_speed
-        self.obstacle_velocities= np.column_stack([velocity_x, velocity_y]).astype(np.float32)
-
+        if self.n_dynamic_obstacles > 0:
+            self.obstacle_velocities = np.column_stack([velocity_x, velocity_y]).astype(np.float32)
+        else:
+            self.obstacle_velocities = np.zeros((0, 2), dtype=np.float32)
+            
         self.step_count = 0
         self.previous_distance  = np.linalg.norm(self.target_position - self.agent_position)
 
