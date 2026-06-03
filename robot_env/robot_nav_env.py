@@ -77,8 +77,15 @@ class RobotNavEnv(gym.Env):
         self.N_LIDAR_RAYS = environment_config["n_lidar_rays"]
         self.LIDAR_RANGE = environment_config["lidar_range"]
 
-        self.n_dynamic_obstacles = environment_config["n_dynamic_obstacles"]
-        self.obstacle_speed = environment_config["obstacle_speed"]
+        if n_dynamic_obstacles is not None:
+            self.n_dynamic_obstacles = n_dynamic_obstacles
+        else:
+            self.n_dynamic_obstacles = environment_config["n_dynamic_obstacles"]
+
+        if obstacle_speed is not None:
+            self.obstacle_speed = obstacle_speed
+        else:
+            self.obstacle_speed = environment_config["obstacle_speed"]
 
         # Static obstacles (list of x,y, half_width, half_height)
         self.static_obstacles = []
