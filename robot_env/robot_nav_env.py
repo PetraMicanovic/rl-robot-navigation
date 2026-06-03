@@ -44,7 +44,7 @@ class RobotNavEnv(gym.Env):
 
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 30}
 
-    def __init__(self, config_path = "config.json", n_dynamic_obstacles = None, obstacle_speed = None, render_mode = None):   
+    def __init__(self, config_path = "config.json", n_dynamic_obstacles = None, obstacle_speed = None, render_mode = None, use_reward_shaping = True):   
         """
         Initialize the RobotNavEnv environment. Loads all parameters from config.json.
 
@@ -57,6 +57,9 @@ class RobotNavEnv(gym.Env):
             Speed of moving obstacles per timestep
         render_mode: str or None
             Rendering mode
+        use_reward_shaping: bool
+            If True, adds progress reward toward the target.
+            If False, only goal, collision and step penalty rewards aare used.
         """     
         super().__init__()
 
@@ -89,6 +92,7 @@ class RobotNavEnv(gym.Env):
         self.REWARD_STEP = reward_config["step_penalty"]
 
         self.render_mode = render_mode
+        self.use_reward_shaping = use_reward_shaping
 
         # Observation space
         observation_size = 4 + self.N_LIDAR_RAYS
@@ -190,7 +194,8 @@ class RobotNavEnv(gym.Env):
 
         # Progress reward
         current_distance = np.linalg.norm(self.target_position - self.agent_position)
-        reward += self.REWARD_PROGRESS * (self.previous_distance - current_distance)
+        if self.use_reward_shaping:
+            reward += self.REWARD_PROGRESS * (self.previous_distance - current_distance)
         self.previous_distance = current_distance
 
         terminated = False
