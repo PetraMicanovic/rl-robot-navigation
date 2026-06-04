@@ -10,6 +10,10 @@ UNSEEN_CONFIGS = [
     {"n_dynamic_obstacles": 8, "obstacle_speed": 1.2},
     {"n_dynamic_obstacles": 5, "obstacle_speed": 0.8},
     {"n_dynamic_obstacles": 10, "obstacle_speed": 1.5},
+    {"n_dynamic_obstacles": 9, "obstacle_speed": 1.3},
+    {"n_dynamic_obstacles": 7, "obstacle_speed": 1},
+    {"n_dynamic_obstacles": 12, "obstacle_speed": 2},
+    {"n_dynamic_obstacles": 15, "obstacle_speed": 0.3},
 ]
 
 def run_e3():
@@ -22,5 +26,4 @@ def run_e3():
             obstacle_speed=config["obstacle_speed"],
             n_eval_episodes=200,
             experiment="e3"
-
         )
