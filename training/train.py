@@ -94,7 +94,8 @@ def train(n_dynamic_obstacles=None, obstacle_speed=None, pretrained_model_path=N
     )
 
     # Save final model
-    experiment_suffix = f"obs{n_dynamic_obstacles}_spd{obstacle_speed}"
+    shaping_suffix = "shaping" if use_reward_shaping else "no_shaping"
+    experiment_suffix = f"obs{n_dynamic_obstacles}_spd{obstacle_speed}_{shaping_suffix}"
     final_model_path = os.path.join(model_dir, f"ppo_robot_nav_{experiment_suffix}")
     agent.save(final_model_path)
     print()
