@@ -28,7 +28,7 @@ def load_config(config_path):
     return config
 
 
-def evaluate(model_path, n_dynamic_obstacles=None, obstacle_speed=None, n_eval_episodes=None, experiment = None):
+def evaluate(model_path, n_dynamic_obstacles=None, obstacle_speed=None, n_eval_episodes=None, experiment = None, label = None):
     """
     Evaluate a trained PPO agent over a fixed number of episodes.
 
@@ -45,6 +45,8 @@ def evaluate(model_path, n_dynamic_obstacles=None, obstacle_speed=None, n_eval_e
         Number of evaluation episodes. Overrides config if provided.
     experiment: str
         Experiment name used for saving results.
+    label: str or None
+        Optional label appended to the results filename to distinguish between variants evaluated on the same configuration.
 
     Returns
     dict
@@ -183,9 +185,11 @@ def evaluate(model_path, n_dynamic_obstacles=None, obstacle_speed=None, n_eval_e
         results_dir = os.path.join(results_dir, experiment)
     os.makedirs(results_dir, exist_ok=True)
     
-    results_filename = f"eval_obs{n_dynamic_obstacles}_spd{obstacle_speed}.json"
+    if label:
+        results_filename = f"eval_obs{n_dynamic_obstacles}_spd{obstacle_speed}_{label}.json"
+    else:
+        results_filename = f"eval_obs{n_dynamic_obstacles}_spd{obstacle_speed}.json"    
     results_path = os.path.join(results_dir, results_filename)
-    
     with open(results_path, "w", encoding="utf-8") as results_file:        
         json.dump(results, results_file, indent=4, ensure_ascii=False)    
     print(f"Results saved to: {results_path}")
