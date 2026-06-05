@@ -23,7 +23,8 @@ def run_e4():
         n_dynamic_obstacles=6,
         obstacle_speed=1.0,
         n_eval_episodes=200,
-        experiment="e4"
+        experiment="e4",
+        label="shaping" 
     )
 
     # Without reward shaping — requires separate config or env flag
@@ -38,5 +39,6 @@ def run_e4():
         n_dynamic_obstacles=6,
         obstacle_speed=1.0,
         n_eval_episodes=200,
-        experiment="e4"
+        experiment="e4",
+        label="no_shaping" 
     )
