@@ -98,6 +98,10 @@ def train(n_dynamic_obstacles=None, obstacle_speed=None, pretrained_model_path=N
     experiment_suffix = f"obs{n_dynamic_obstacles}_spd{obstacle_speed}_{shaping_suffix}"
     final_model_path = os.path.join(model_dir, f"ppo_robot_nav_{experiment_suffix}")
     agent.save(final_model_path)
+    meta = {"tb_log_folder": agent.logger.dir}  # SB3 čuva putanju loga ovdje
+    meta_path = final_model_path + "_meta.json"
+    with open(meta_path, "w") as f:
+        json.dump(meta, f)
     print()
     print(f"Training complete. Model saved to: {final_model_path}.zip")
 
