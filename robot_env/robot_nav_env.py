@@ -1,14 +1,17 @@
 """
 Custom Gymnasium environment for mobile robot navigation in a 2D space with static and dynamic obstacles.
 
-Observation space:
-    [dx, dy, vx, vy, l1, l2, l3, l4, l5, l6, l7, l8]
-    - dx, dy: relative position of the target
-    - vx, vy: current agent velocity
-    - l1...l8: lidar readings 
+Observation space (v2):
+    [dx, dy, vx, vy, l1...l24, ovx1, ovy1, ovx2, ovy2, ovx3, ovy3]
+    - dx, dy: relative position of the target (normalized by world size)
+    - vx, vy: current agent velocity (normalized by max speed)
+    - l1...l24:  24 lidar readings at 15 degree intervals (normalized by lidar range)
+    - ovx1..ovy3: velocity of the 3 nearest dynamic obstacles (normalized by obstacle speed)
+                  zero-padded when fewer than 3 obstacles are present
+
 
 Action space:
-    [vx, vy] in [-1, 1]^2 - continuous velocity vestor
+    [vx, vy] in [-1, 1]^2 - continuous velocity vector
 
 Reward:
     +10.00: reaching the target
@@ -98,11 +101,14 @@ class RobotNavEnv(gym.Env):
         self.REWARD_PROGRESS = reward_config["progress_scale"]
         self.REWARD_STEP = reward_config["step_penalty"]
 
+        # Number of nearest obstacle velocities to include in observation
+        self.N_OBSTACLE_VELOCITIES = 3
+
         self.render_mode = render_mode
         self.use_reward_shaping = use_reward_shaping
 
-        # Observation space
-        observation_size = 4 + self.N_LIDAR_RAYS
+        # Observation space: [dx, dy, vx, vy] + N_LIDAR_RAYS + N_OBSTACLE_VELOCITIES * 2
+        observation_size = 4 + self.N_LIDAR_RAYS + self.N_OBSTACLE_VELOCITIES * 2
         self.observation_space = spaces.Box(low = -1.0, high = 1.0, shape = (observation_size,), dtype = np.float32)
 
         # Action space
@@ -129,7 +135,7 @@ class RobotNavEnv(gym.Env):
             Random seed for reproducibility
 
         Returns:
-        observation: np.ndarray (12,)
+        observation: np.ndarray (34,)
             The initial observation vector for the new episode
         info: dict
             Empty dictionary
@@ -172,7 +178,7 @@ class RobotNavEnv(gym.Env):
             Velocity command [vx, vy] in [-1, 1]^2 
 
         Returns:
-        observation: np.ndarray (12,)
+        observation: np.ndarray (34,)
             Updated observation vector after the step
         reward: float 
             Reward received for this timestep
@@ -240,14 +246,27 @@ class RobotNavEnv(gym.Env):
         None
 
         Returns:
-        observation: np.ndarray (12,)
+        observation: np.ndarray
             Normalized observation vector:
-            [dx, dy, vx, vy, l1, l2, l3, l4, l5, l6, l7, l8]
+            [dx, dy, vx, vy, l1...l24, ovx1, ovy1, ovx2, ovy2, ovx3, ovy3]
+            Total size: 4 + N_LIDAR_RAYS + N_OBSTACLE_VELOCITIES * 2
         """
         relative_target = (self.target_position - self.agent_position) / self.WORLD_SIZE
         normalized_velocity = self.agent_velocity / self.MAX_SPEED
         normalized_lidar_readings = self._cast_lidar_rays() / self.LIDAR_RANGE
-        observation = np.concatenate([relative_target, normalized_velocity, normalized_lidar_readings]).astype(np.float32)
+        
+        # Velocities of the N_OBSTACLE_VELOCITIES nearest dynamic obstacles (normalized by obstacle speed)
+        # Zero-padded when fewer obstacles are present
+        obstacle_velocity_flatten = np.zeros(self.N_OBSTACLE_VELOCITIES * 2, dtype=np.float32)
+        if self.n_dynamic_obstacles > 0 and self.obstacle_speed > 0:
+            distances = np.linalg.norm(self.obstacle_positions - self.agent_position, axis=1)
+            n_nearest = min(self.N_OBSTACLE_VELOCITIES, self.n_dynamic_obstacles)
+            nearest_idx = np.argsort(distances)[:n_nearest]
+            nearest_velocities = self.obstacle_velocities[nearest_idx] / self.obstacle_speed
+            obstacle_velocity_flatten[:n_nearest * 2] = nearest_velocities.flatten()
+
+        observation = np.concatenate([relative_target, normalized_velocity, normalized_lidar_readings, obstacle_velocity_flatten]).astype(np.float32)
+
         return np.clip(observation, -1.0, 1.0)
 
     def _cast_lidar_rays(self):
