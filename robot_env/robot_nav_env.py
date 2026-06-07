@@ -16,8 +16,10 @@ Action space:
 Reward:
     +10.00: reaching the target
     -10.00: collision with any obstacle
-    +0.1 * delta_d: progress toward the target
+    +0.1 * delta_d: progress toward the target (if use_reward_shaping=True)
     -0.01: penality per timestep
+    proximity penalty:  smooth penalty scaling from 0 at danger_zone_radius to proximity_penalty_scale at contact distance (if use_reward_shaping=True)
+
 """
 import numpy as np
 import gymnasium as gym
@@ -100,6 +102,8 @@ class RobotNavEnv(gym.Env):
         self.REWARD_COLLISION = reward_config["collision"]
         self.REWARD_PROGRESS = reward_config["progress_scale"]
         self.REWARD_STEP = reward_config["step_penalty"]
+        self.DANGER_ZONE_RADIUS = reward_config["danger_zone_radius"]
+        self.PROXIMITY_PENALTY_SCALE = reward_config["proximity_penalty_scale"]
 
         # Number of nearest obstacle velocities to include in observation
         self.N_OBSTACLE_VELOCITIES = 3
@@ -214,6 +218,15 @@ class RobotNavEnv(gym.Env):
         current_distance = np.linalg.norm(self.target_position - self.agent_position)
         if self.use_reward_shaping:
             reward += self.REWARD_PROGRESS * (self.previous_distance - current_distance)
+            
+            # Proximity penalty: smooth quadratic penalty when inside danger zone
+            if self.n_dynamic_obstacles > 0:
+                dists_to_obs = np.linalg.norm( self.obstacle_positions - self.agent_position, axis=1) - self.OBSTACLE_RADIUS - self.AGENT_RADIUS
+                clearance = float(np.min(dists_to_obs))
+                if clearance < self.DANGER_ZONE_RADIUS:
+                    t = max(0.0, 1.0 - clearance / self.DANGER_ZONE_RADIUS)
+                    reward -= self.PROXIMITY_PENALTY_SCALE * (t ** 2)
+
         self.previous_distance = current_distance
 
         terminated = False
