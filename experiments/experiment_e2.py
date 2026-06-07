@@ -7,7 +7,7 @@ import os
 from training.train import train
 from evaluation.evaluate import evaluate
 
-PHASE1_MODEL = "models/ppo_robot_nav_obs0_spd1.0"
+PHASE1_MODEL = "models/ppo_robot_nav_obs0_spd1.0_shaping"
 
 
 def run_e2():

@@ -4,7 +4,7 @@ Evaluates a model trained on N=6, v=1.0 on unseen configurations (N=8, v=1.2 and
 """
 from evaluation.evaluate import evaluate
 
-TRAINED_MODEL = "models/ppo_robot_nav_obs6_spd1.0"
+TRAINED_MODEL = "models/ppo_robot_nav_obs6_spd1.0_shaping"
 
 UNSEEN_CONFIGS = [
     {"n_dynamic_obstacles": 8, "obstacle_speed": 1.2},
