@@ -81,20 +81,19 @@ def evaluate(model_path, n_dynamic_obstacles=None, obstacle_speed=None, n_eval_e
     print()
 
     # Load trained model
-    if not os.path.exists(model_path):
+    if not os.path.exists(model_path) and not os.path.exists(model_path + ".zip"):
         raise FileNotFoundError(f"Model not found: {model_path}")
 
-    model = PPO.load(model_path)
-    print("Model loaded successfully.")
-    print()
-
-    # Evaluation environment without rendering
     eval_env = RobotNavEnv(
         config_path=CONFIG_PATH,
         n_dynamic_obstacles=n_dynamic_obstacles,
         obstacle_speed=obstacle_speed,
         render_mode=None
     )
+
+    model = PPO.load(model_path, env=eval_env)
+    print("Model loaded successfully.")
+    print()
 
     # Metrics accumulators 
     number_of_successes = 0
