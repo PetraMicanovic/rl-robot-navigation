@@ -25,7 +25,7 @@ def run_e2():
             pretrained_model_path=PHASE1_MODEL
         )
         evaluate(
-            model_path=f"models/ppo_robot_nav_obs6_spd{speed}",
+            model_path=f"models/ppo_robot_nav_obs6_spd{speed}_shaping",
             n_dynamic_obstacles=6,
             obstacle_speed=speed,
             n_eval_episodes=200,
