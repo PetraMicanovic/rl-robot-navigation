@@ -1,0 +1,1411 @@
+{
+    "success_rate": 0.065,
+    "avg_episode_length": 407.375,
+    "avg_collision_count": 0.125,
+    "n_success": 13,
+    "n_collision": 25,
+    "n_truncated": 162,
+    "n_episodes": 200,
+    "episodes": [
+        {
+            "episode": 1,
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 5.460639953613281
+        },
+        {
+            "episode": 2,
+            "outcome": "COLLISION",
+            "steps": 2,
+            "collisions": 1,
+            "final_dist": 5.429066181182861
+        },
+        {
+            "episode": 3,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.71146821975708
+        },
+        {
+            "episode": 4,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.154741287231445
+        },
+        {
+            "episode": 5,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 1.9506999254226685
+        },
+        {
+            "episode": 6,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 1.4656659364700317
+        },
+        {
+            "episode": 7,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.943820953369141
+        },
+        {
+            "episode": 8,
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 3.7531583309173584
+        },
+        {
+            "episode": 9,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.5365729331970215
+        },
+        {
+            "episode": 10,
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 6.392833709716797
+        },
+        {
+            "episode": 11,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 2.3543150424957275
+        },
+        {
+            "episode": 12,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.871090412139893
+        },
+        {
+            "episode": 13,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 7.586986064910889
+        },
+        {
+            "episode": 14,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.853631973266602
+        },
+        {
+            "episode": 15,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 1.147179126739502
+        },
+        {
+            "episode": 16,
+            "outcome": "SUCCESS",
+            "steps": 18,
+            "collisions": 0,
+            "final_dist": 0.29524534940719604
+        },
+        {
+            "episode": 17,
+            "outcome": "SUCCESS",
+            "steps": 312,
+            "collisions": 0,
+            "final_dist": 0.31371527910232544
+        },
+        {
+            "episode": 18,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.049267768859863
+        },
+        {
+            "episode": 19,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.422238349914551
+        },
+        {
+            "episode": 20,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 8.118041038513184
+        },
+        {
+            "episode": 21,
+            "outcome": "SUCCESS",
+            "steps": 4,
+            "collisions": 0,
+            "final_dist": 0.393637478351593
+        },
+        {
+            "episode": 22,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 7.877875804901123
+        },
+        {
+            "episode": 23,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.442844390869141
+        },
+        {
+            "episode": 24,
+            "outcome": "COLLISION",
+            "steps": 2,
+            "collisions": 1,
+            "final_dist": 1.3682702779769897
+        },
+        {
+            "episode": 25,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.759329319000244
+        },
+        {
+            "episode": 26,
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 9.903472900390625
+        },
+        {
+            "episode": 27,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.912064552307129
+        },
+        {
+            "episode": 28,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.425234794616699
+        },
+        {
+            "episode": 29,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.450596570968628
+        },
+        {
+            "episode": 30,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.260822772979736
+        },
+        {
+            "episode": 31,
+            "outcome": "SUCCESS",
+            "steps": 3,
+            "collisions": 0,
+            "final_dist": 0.2762283980846405
+        },
+        {
+            "episode": 32,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.512747287750244
+        },
+        {
+            "episode": 33,
+            "outcome": "SUCCESS",
+            "steps": 2,
+            "collisions": 0,
+            "final_dist": 0.21423867344856262
+        },
+        {
+            "episode": 34,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.183224201202393
+        },
+        {
+            "episode": 35,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 8.796104431152344
+        },
+        {
+            "episode": 36,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 8.72269058227539
+        },
+        {
+            "episode": 37,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.902435302734375
+        },
+        {
+            "episode": 38,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.830814361572266
+        },
+        {
+            "episode": 39,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.024115085601807
+        },
+        {
+            "episode": 40,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 7.2663893699646
+        },
+        {
+            "episode": 41,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.3134968280792236
+        },
+        {
+            "episode": 42,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.231712341308594
+        },
+        {
+            "episode": 43,
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 7.587986469268799
+        },
+        {
+            "episode": 44,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.7333598136901855
+        },
+        {
+            "episode": 45,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 8.366954803466797
+        },
+        {
+            "episode": 46,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 7.701420307159424
+        },
+        {
+            "episode": 47,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.425723075866699
+        },
+        {
+            "episode": 48,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.1231789588928223
+        },
+        {
+            "episode": 49,
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 2.2077605724334717
+        },
+        {
+            "episode": 50,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.154006958007812
+        },
+        {
+            "episode": 51,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.341970443725586
+        },
+        {
+            "episode": 52,
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 4.440950870513916
+        },
+        {
+            "episode": 53,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 1.8008275032043457
+        },
+        {
+            "episode": 54,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 7.965482234954834
+        },
+        {
+            "episode": 55,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 1.796295166015625
+        },
+        {
+            "episode": 56,
+            "outcome": "COLLISION",
+            "steps": 2,
+            "collisions": 1,
+            "final_dist": 5.717183589935303
+        },
+        {
+            "episode": 57,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.834197998046875
+        },
+        {
+            "episode": 58,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 1.5337244272232056
+        },
+        {
+            "episode": 59,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 2.5559613704681396
+        },
+        {
+            "episode": 60,
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 6.535290718078613
+        },
+        {
+            "episode": 61,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.405806541442871
+        },
+        {
+            "episode": 62,
+            "outcome": "COLLISION",
+            "steps": 3,
+            "collisions": 1,
+            "final_dist": 2.122220039367676
+        },
+        {
+            "episode": 63,
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 5.471360683441162
+        },
+        {
+            "episode": 64,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.7220988273620605
+        },
+        {
+            "episode": 65,
+            "outcome": "SUCCESS",
+            "steps": 33,
+            "collisions": 0,
+            "final_dist": 0.11903979629278183
+        },
+        {
+            "episode": 66,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.3528621196746826
+        },
+        {
+            "episode": 67,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.518786907196045
+        },
+        {
+            "episode": 68,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.095210552215576
+        },
+        {
+            "episode": 69,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.454426288604736
+        },
+        {
+            "episode": 70,
+            "outcome": "COLLISION",
+            "steps": 2,
+            "collisions": 1,
+            "final_dist": 5.012270927429199
+        },
+        {
+            "episode": 71,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.787208080291748
+        },
+        {
+            "episode": 72,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 2.107170343399048
+        },
+        {
+            "episode": 73,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 0.9405215382575989
+        },
+        {
+            "episode": 74,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.231586456298828
+        },
+        {
+            "episode": 75,
+            "outcome": "COLLISION",
+            "steps": 3,
+            "collisions": 1,
+            "final_dist": 5.74226188659668
+        },
+        {
+            "episode": 76,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.249821662902832
+        },
+        {
+            "episode": 77,
+            "outcome": "COLLISION",
+            "steps": 2,
+            "collisions": 1,
+            "final_dist": 2.200471878051758
+        },
+        {
+            "episode": 78,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 1.1236848831176758
+        },
+        {
+            "episode": 79,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.463223934173584
+        },
+        {
+            "episode": 80,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.2078447341918945
+        },
+        {
+            "episode": 81,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.921990394592285
+        },
+        {
+            "episode": 82,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.705042839050293
+        },
+        {
+            "episode": 83,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.278586387634277
+        },
+        {
+            "episode": 84,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.892160654067993
+        },
+        {
+            "episode": 85,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.389731407165527
+        },
+        {
+            "episode": 86,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.06507682800293
+        },
+        {
+            "episode": 87,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.519077777862549
+        },
+        {
+            "episode": 88,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.6164698600769043
+        },
+        {
+            "episode": 89,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.161635875701904
+        },
+        {
+            "episode": 90,
+            "outcome": "COLLISION",
+            "steps": 3,
+            "collisions": 1,
+            "final_dist": 6.007072925567627
+        },
+        {
+            "episode": 91,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 2.203270435333252
+        },
+        {
+            "episode": 92,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 7.526525974273682
+        },
+        {
+            "episode": 93,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.7742862701416016
+        },
+        {
+            "episode": 94,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.229440212249756
+        },
+        {
+            "episode": 95,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 2.7531464099884033
+        },
+        {
+            "episode": 96,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.208801746368408
+        },
+        {
+            "episode": 97,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.107259750366211
+        },
+        {
+            "episode": 98,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 8.912614822387695
+        },
+        {
+            "episode": 99,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 7.206886291503906
+        },
+        {
+            "episode": 100,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.393144130706787
+        },
+        {
+            "episode": 101,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.552696704864502
+        },
+        {
+            "episode": 102,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 8.642928123474121
+        },
+        {
+            "episode": 103,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.385303497314453
+        },
+        {
+            "episode": 104,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 1.7844080924987793
+        },
+        {
+            "episode": 105,
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 4.62415885925293
+        },
+        {
+            "episode": 106,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.641211986541748
+        },
+        {
+            "episode": 107,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.176885604858398
+        },
+        {
+            "episode": 108,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 0.8915570974349976
+        },
+        {
+            "episode": 109,
+            "outcome": "SUCCESS",
+            "steps": 23,
+            "collisions": 0,
+            "final_dist": 0.2566990852355957
+        },
+        {
+            "episode": 110,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.096529960632324
+        },
+        {
+            "episode": 111,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.011283874511719
+        },
+        {
+            "episode": 112,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 8.826687812805176
+        },
+        {
+            "episode": 113,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.13229513168335
+        },
+        {
+            "episode": 114,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.173713684082031
+        },
+        {
+            "episode": 115,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.978619575500488
+        },
+        {
+            "episode": 116,
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 5.742538928985596
+        },
+        {
+            "episode": 117,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.649471282958984
+        },
+        {
+            "episode": 118,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.926769256591797
+        },
+        {
+            "episode": 119,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.707763671875
+        },
+        {
+            "episode": 120,
+            "outcome": "SUCCESS",
+            "steps": 11,
+            "collisions": 0,
+            "final_dist": 0.33510658144950867
+        },
+        {
+            "episode": 121,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.903225421905518
+        },
+        {
+            "episode": 122,
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 3.4602553844451904
+        },
+        {
+            "episode": 123,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 1.2839903831481934
+        },
+        {
+            "episode": 124,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 2.753185987472534
+        },
+        {
+            "episode": 125,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 8.577875137329102
+        },
+        {
+            "episode": 126,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.788194179534912
+        },
+        {
+            "episode": 127,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.032983779907227
+        },
+        {
+            "episode": 128,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.014707565307617
+        },
+        {
+            "episode": 129,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.858092784881592
+        },
+        {
+            "episode": 130,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.8601088523864746
+        },
+        {
+            "episode": 131,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.782782554626465
+        },
+        {
+            "episode": 132,
+            "outcome": "SUCCESS",
+            "steps": 10,
+            "collisions": 0,
+            "final_dist": 0.12180709093809128
+        },
+        {
+            "episode": 133,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.195422172546387
+        },
+        {
+            "episode": 134,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.858425140380859
+        },
+        {
+            "episode": 135,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 0.8190066814422607
+        },
+        {
+            "episode": 136,
+            "outcome": "SUCCESS",
+            "steps": 9,
+            "collisions": 0,
+            "final_dist": 0.1402585208415985
+        },
+        {
+            "episode": 137,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 1.8958442211151123
+        },
+        {
+            "episode": 138,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.447178840637207
+        },
+        {
+            "episode": 139,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 7.013136863708496
+        },
+        {
+            "episode": 140,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.684992790222168
+        },
+        {
+            "episode": 141,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 1.6295255422592163
+        },
+        {
+            "episode": 142,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 7.520091533660889
+        },
+        {
+            "episode": 143,
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 9.627185821533203
+        },
+        {
+            "episode": 144,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 8.245736122131348
+        },
+        {
+            "episode": 145,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 2.0254297256469727
+        },
+        {
+            "episode": 146,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.59901762008667
+        },
+        {
+            "episode": 147,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.4201784133911133
+        },
+        {
+            "episode": 148,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.170450210571289
+        },
+        {
+            "episode": 149,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 8.611144065856934
+        },
+        {
+            "episode": 150,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.039506912231445
+        },
+        {
+            "episode": 151,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.779244422912598
+        },
+        {
+            "episode": 152,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.547022819519043
+        },
+        {
+            "episode": 153,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.602856159210205
+        },
+        {
+            "episode": 154,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.053922653198242
+        },
+        {
+            "episode": 155,
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 4.503668308258057
+        },
+        {
+            "episode": 156,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 8.446431159973145
+        },
+        {
+            "episode": 157,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.023642539978027
+        },
+        {
+            "episode": 158,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 8.948893547058105
+        },
+        {
+            "episode": 159,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.723120212554932
+        },
+        {
+            "episode": 160,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.832746982574463
+        },
+        {
+            "episode": 161,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.4612579345703125
+        },
+        {
+            "episode": 162,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.516844749450684
+        },
+        {
+            "episode": 163,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.885120391845703
+        },
+        {
+            "episode": 164,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.227416515350342
+        },
+        {
+            "episode": 165,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 8.952811241149902
+        },
+        {
+            "episode": 166,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.603591918945312
+        },
+        {
+            "episode": 167,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 1.612720251083374
+        },
+        {
+            "episode": 168,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.0069727897644043
+        },
+        {
+            "episode": 169,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.132813453674316
+        },
+        {
+            "episode": 170,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.4310476779937744
+        },
+        {
+            "episode": 171,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 8.725157737731934
+        },
+        {
+            "episode": 172,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 2.437209129333496
+        },
+        {
+            "episode": 173,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.366287708282471
+        },
+        {
+            "episode": 174,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 8.27977180480957
+        },
+        {
+            "episode": 175,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.9747822284698486
+        },
+        {
+            "episode": 176,
+            "outcome": "COLLISION",
+            "steps": 3,
+            "collisions": 1,
+            "final_dist": 6.29051399230957
+        },
+        {
+            "episode": 177,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.5755908489227295
+        },
+        {
+            "episode": 178,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.059805870056152
+        },
+        {
+            "episode": 179,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.975156307220459
+        },
+        {
+            "episode": 180,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 10.420934677124023
+        },
+        {
+            "episode": 181,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.20344352722168
+        },
+        {
+            "episode": 182,
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 2.54555082321167
+        },
+        {
+            "episode": 183,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 8.894389152526855
+        },
+        {
+            "episode": 184,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.984532356262207
+        },
+        {
+            "episode": 185,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.7092223167419434
+        },
+        {
+            "episode": 186,
+            "outcome": "SUCCESS",
+            "steps": 4,
+            "collisions": 0,
+            "final_dist": 0.274700790643692
+        },
+        {
+            "episode": 187,
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 5.3970208168029785
+        },
+        {
+            "episode": 188,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 1.6495771408081055
+        },
+        {
+            "episode": 189,
+            "outcome": "SUCCESS",
+            "steps": 3,
+            "collisions": 0,
+            "final_dist": 0.25124049186706543
+        },
+        {
+            "episode": 190,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.1034536361694336
+        },
+        {
+            "episode": 191,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.110778331756592
+        },
+        {
+            "episode": 192,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 4.824180603027344
+        },
+        {
+            "episode": 193,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 3.9760758876800537
+        },
+        {
+            "episode": 194,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 1.8817150592803955
+        },
+        {
+            "episode": 195,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 8.727212905883789
+        },
+        {
+            "episode": 196,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 5.96013069152832
+        },
+        {
+            "episode": 197,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 9.205137252807617
+        },
+        {
+            "episode": 198,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 11.054381370544434
+        },
+        {
+            "episode": 199,
+            "outcome": "SUCCESS",
+            "steps": 5,
+            "collisions": 0,
+            "final_dist": 0.26718834042549133
+        },
+        {
+            "episode": 200,
+            "outcome": "TRUNCATED",
+            "steps": 500,
+            "collisions": 0,
+            "final_dist": 6.595455169677734
+        }
+    ]
+}
