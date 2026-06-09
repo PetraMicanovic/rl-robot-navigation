@@ -1,18 +1,18 @@
-# Evaluation Results — Baseline (v1.0)
+# Evaluation Results — v2.0 (Observation + Reward Updates)
 
-This document summarizes the results of four experiments conducted to evaluate the performance of a PPO-based robot navigation agent. The goal was to understand how the agent behaves under different environment conditions and whether reward shaping has a measurable effect on performance. All experiments were run with 200 evaluation episodes using a deterministic policy.
+This document summarizes the results of four experiments run to evaluate a PPO-based robot navigation agent trained with the v2.0-obs-reward changes. All experiments use 200 evaluation episodes with a deterministic policy.
+
+Compared to v1.0-baseline, this version introduces three changes: LIDAR resolution increased from 8 to 24 rays, observation space extended with velocities of the three nearest dynamic obstacles and a proximity penalty added to the reward function.
 
 ---
 
 ## Training configuration
 
-The base model was trained with the following settings:
-
 | Parameter | Value |
 |---|---|
 | Algorithm | PPO |
 | Network | MLP `[256, 256]` |
-| Observation space | 8 lidar rays, agent velocity, target direction |
+| Observation space | 24 lidar rays, agent velocity, target direction, 3 nearest obstacle velocities |
 | Action space | Continuous velocity control |
 | Base training config | N=6 obstacles, speed=1.0 |
 | Total timesteps | 3,000,000 |
@@ -21,23 +21,21 @@ The base model was trained with the following settings:
 
 ## E1 — Effect of obstacle density
 
-The model trained on N=6, speed=1.0 was evaluated across three obstacle counts while keeping speed fixed at 1.0. The goal was to see how well the agent handles environments with more or fewer obstacles than it was trained on.
+The model trained on N=6, speed=1.0 was evaluated across three obstacle counts at fixed speed=1.0.
 
-| Obstacles | Success | Collisions | Truncated | Avg steps | Avg col/ep |
-|---|---|---|---|---|---|
-| N=3 | 13.0% (26/200) | 87.0% | 0.0% | 52.4 | 0.870 |
-| N=6 (training) | 8.0% (16/200) | 92.0% | 0.0% | 27.5 | 0.920 |
-| N=10 | 6.0% (12/200) | 94.0% | 0.0% | 13.3 | 0.940 |
+| Obstacles | Success | Collisions | Truncated | Avg steps | Avg col/ep | vs v1 |
+|---|---|---|---|---|---|---|
+| N=3 | 21.0% (42/200) | 78.5% | 0.5% | 41.6 | 0.785 | +8.0pp |
+| N=6 (training) | 14.5% (29/200) | 85.5% | 0.0% | 20.2 | 0.855 | +6.5pp |
+| N=10 | 8.5% (17/200) | 91.5% | 0.0% | 10.4 | 0.915 | +2.5pp |
 
 ![E1 metrics](figures/e1_metrics.png)
 
-The results show a clear drop in performance as obstacle density increases. What is perhaps more telling is the average episode length — it falls from 52.4 steps at N=3 down to just 13.3 at N=10. This suggests the agent is not actively navigating around obstacles but rather colliding with them sooner as the environment becomes more crowded.
+All three configurations improved compared to v1. The biggest gain is at N=3 (+8.0pp) and at the training configuration N=6 (+6.5pp), which suggests the richer observation space is helping the agent navigate more effectively when obstacle density is moderate. At N=10 the gain is smaller — with a lot of fast-moving obstacles the proximity penalty and velocity signals seem to help less.
 
-It is also worth noting that even at N=6, which is the exact training configuration, success rate is only 8%. This suggests that the agent may not have learned a general navigation strategy but rather something much more specific to the conditions it was trained under.
+Average episode length drops from 41.6 at N=3 to 10.4 at N=10, the same pattern as in v1, but the higher success rates suggest the agent is now reaching the goal more often rather than just colliding a bit later.
 
 ![E1 training curves](figures/e1_training_curves.png)
-
-Looking at the training curves, the N=0 model learns reasonably well — it converges and stays around −5.2 for most of training. The other three models, trained with dynamic obstacles, basically do not improve at all over 3M timesteps. They all stay between −9 and −10 with no clear trend. This suggests that simply extending training might not be sufficient and that some aspect of the setup may need to change.
 
 ---
 
@@ -45,58 +43,54 @@ Looking at the training curves, the N=0 model learns reasonably well — it conv
 
 Model trained on N=6, speed=1.0. Evaluated on different speeds at fixed N=6.
 
-| Speed | Success | Collisions | Truncated | Avg steps | Avg col/ep |
-|---|---|---|---|---|---|
-| 0.5 (slower) | 8.0% (16/200) | 92.0% | 0.0% | 51.4 | 0.920 |
-| 1.0 (training) | 9.5% (19/200) | 90.5% | 0.0% | 25.8 | 0.905 |
-| 1.5 (faster) | 17.5% (35/200) | 82.5% | 0.0% | 11.2 | 0.825 |
+| Speed | Success | Collisions | Truncated | Avg steps | Avg col/ep | vs v1 |
+|---|---|---|---|---|---|---|
+| 0.5 (slower) | 1.0% (2/200) | 96.5% | 2.5% | 79.5 | 0.965 | -7.0pp |
+| 1.0 (training) | 10.0% (20/200) | 90.0% | 0.0% | 24.6 | 0.900 | +0.5pp |
+| 1.5 (faster) | 15.0% (30/200) | 85.0% | 0.0% | 12.3 | 0.850 | -2.5pp |
 
 ![E2 metrics](figures/e2_metrics.png)
 
-The most interesting finding here is that the agent actually performs better with faster obstacles. At speed=1.5, success rate reaches 17.5%, which is more than double the 8.0% achieved with speed=0.5. This seems counterintuitive at first, but it makes sense when you consider what strategy the agent has likely learned — it appears to rush toward the goal in a fairly direct path rather than actively avoiding obstacles. When obstacles move faster, they clear out of the way more quickly, which happens to work in the agent's favor. Slower obstacles stay in the path longer and the agent has no strategy for waiting or re-routing.
+The most interesting result here is the big drop at speed=0.5 — from 8.0% in v1 down to just 1.0%. A likely explanation is that the proximity penalty is causing this: slow obstacles stay in the agent's path longer, so the agent gets sustained penalties for being near them but hasn't learned how to go around them — it ends up hesitating and either colliding or running out of steps (2.5% truncated, compared to 0% in v1).
 
-The drop in average episode length from 51.4 to 11.2 steps further supports this interpretation — at speed=1.5 the agent either reaches the goal or collides very quickly.
+At speed=1.5 the result is slightly lower than v1 (15.0% vs 17.5%), though the gap is small. At the training speed of 1.0 the results are almost identical (+0.5pp).
 
 ![E2 training curves](figures/e2_training_curves.png)
-
-In the training curves, speed=1.5 stands out as the only one that actually improves over time, ending around −6.6. The other two are mostly flat. This lines up with the evaluation results and again suggests the agent is benefiting from the obstacle dynamics rather than learning to avoid them.
 
 ---
 
 ## E3 — Generalization to unseen configurations
 
-To test how well the trained model generalizes, it was evaluated on seven configurations that were not seen during training. These vary in both obstacle count and speed.
+Evaluated on seven configurations not seen during training.
 
-| Obstacles | Speed | Success | Collisions | Truncated | Avg steps | Avg col/ep |
-|---|---|---|---|---|---|---|
-| 5 | 0.8 | 14.0% (28/200) | 85.5% | 0.5% | 44.1 | 0.855 |
-| 7 | 1.0 | 10.0% (20/200) | 90.0% | 0.0% | 20.8 | 0.900 |
-| 8 | 1.2 | 8.0% (16/200) | 92.0% | 0.0% | 15.6 | 0.920 |
-| 9 | 1.3 | 9.0% (18/200) | 91.0% | 0.0% | 15.4 | 0.910 |
-| 10 | 1.5 | 4.0% (8/200) | 96.0% | 0.0% | 10.6 | 0.960 |
-| 12 | 2.0 | 5.5% (11/200) | 94.5% | 0.0% | 8.1 | 0.945 |
-| 15 | 0.3 | 6.5% (13/200) | 93.5% | 0.0% | 25.2 | 0.935 |
+| Obstacles | Speed | Success | Collisions | Truncated | Avg steps | Avg col/ep | vs v1 |
+|---|---|---|---|---|---|---|---|
+| 5 | 0.8 | 14.5% (29/200) | 85.5% | 0.0% | 28.7 | 0.855 | +0.5pp |
+| 7 | 1.0 | 14.0% (28/200) | 86.0% | 0.0% | 22.7 | 0.860 | +4.0pp |
+| 8 | 1.2 | 10.0% (20/200) | 90.0% | 0.0% | 15.0 | 0.900 | +2.0pp |
+| 9 | 1.3 | 7.0% (14/200) | 93.0% | 0.0% | 15.1 | 0.930 | -2.0pp |
+| 10 | 1.5 | 6.0% (12/200) | 94.0% | 0.0% | 10.5 | 0.940 | +2.0pp |
+| 12 | 2.0 | 5.5% (11/200) | 94.5% | 0.0% | 7.9 | 0.945 | +0.0pp |
+| 15 | 0.3 | 6.5% (13/200) | 93.5% | 0.0% | 20.1 | 0.935 | +0.0pp |
 
 ![E3 metrics](figures/e3_metrics.png)
 
-The dashed line marks the training-configuration baseline (8%). Bar colors indicate whether a configuration performs above (green), near (grey), or below (coral) that baseline. Generalization is reasonable close to the training distribution but degrades quickly as configurations become more extreme. The best results are on N=5/speed=0.8 (14%) and N=7/speed=1.0 (10%), both of which are close to the N=6/speed=1.0 training setup. At N=10/speed=1.5 and N=12/speed=2.0, success rate drops to 4–5.5%.
-
-One slightly unexpected result is N=15/speed=0.3, which achieves 6.5% despite having the most obstacles. The slower speed means episodes last longer on average (25.2 steps vs 8.1 for N=12/speed=2.0), which gives the agent more time to incidentally reach the goal. This again points to the agent relying on something closer to luck than a learned avoidance strategy.
+Generalization results are mostly the same as v1 or a bit better. The biggest improvement is at N=7/speed=1.0 (+4.0pp). The only notable regression is N=9/speed=1.3 (-2.0pp), though the difference is small enough that it could just be noise. Configurations with very slow obstacles (speed=0.3) or very high density (N=12, N=15) are still hard for the agent, for the same reasons as in E2 — the proximity penalty seems to hurt more than it helps in those cases.
 
 ---
 
 ## E4 — Effect of reward shaping
 
-Both models start from a phase-1 pretrained model (N=0, speed=1.0) and are fine-tuned on N=6, speed=1.0 for 3,000,000 timesteps. The only difference is whether a progress reward toward the target is included.
+Both models trained on N=6, speed=1.0 for 3,000,000 timesteps.
 
-| Variant | Success | Collisions | Truncated | Avg steps | Avg col/ep |
-|---|---|---|---|---|---|
-| With shaping | 9.5% (19/200) | 90.5% | 0.0% | 22.1 | 0.905 |
-| Without shaping | 7.5% (15/200) | 92.5% | 0.0% | 26.9 | 0.925 |
+| Variant | Success | Collisions | Truncated | Avg steps | Avg col/ep | vs v1 |
+|---|---|---|---|---|---|---|
+| With shaping | 7.5% (15/200) | 92.5% | 0.0% | 30.0 | 0.925 | -2.0pp |
+| Without shaping | 7.5% (15/200) | 92.5% | 0.0% | 28.8 | 0.925 | +0.0pp |
 
 ![E4 metrics](figures/e4_metrics.png)
 
-Adding the progress reward does help — success rate goes from 7.5% to 9.5% and collisions per episode drop slightly as well. The shaping model also has shorter average episodes (22.1 vs 26.9 steps), which likely means it moves more directly toward the goal instead of wandering. That said, the overall numbers are still quite low, suggesting that reward shaping alone is not sufficient to achieve reliable navigation behavior.
+Both variants end up at exactly 7.5%, which is different from v1 where the shaping variant was slightly better (9.5% vs 7.5%). One possible explanation is that the proximity penalty is creating a conflict with the progress reward — the agent is being pushed toward the goal but also penalized for being close to obstacles that might be in the way. Without shaping, neither signal is present and the agent ends up with the same result anyway. Either way, reward shaping doesn't seem to be making a consistent difference with the current setup.
 
 ---
 
@@ -104,25 +98,21 @@ Adding the progress reward does help — success rate goes from 7.5% to 9.5% and
 
 ![All eval curves](figures/all_eval_curves.png)
 
-This plot shows all training runs together. The N=0 model is clearly different from the rest — it shows clear convergence, while all obstacle configurations remain largely flat throughout training. Among those, speed=1.5 is the only one that improves noticeably in the second half, which matches what we saw in the evaluation.
-
 ---
 
 ## Overall summary
 
-| Experiment | Best result | Configuration |
-|---|---|---|
-| E1 | 13.0% | N=3, speed=1.0 |
-| E2 | 17.5% | N=6, speed=1.5 |
-| E3 | 14.0% | N=5, speed=0.8 |
-| E4 | 9.5% | N=6, speed=1.0 + shaping |
+| Experiment | Best result | Configuration | vs v1 |
+|---|---|---|---|
+| E1 | 21.0% | N=3, speed=1.0 | +8.0pp |
+| E2 | 15.0% | N=6, speed=1.5 | -2.5pp |
+| E3 | 14.5% | N=5, speed=0.8 | +0.5pp |
+| E4 | 7.5% | N=6, speed=1.0 | -2.0pp |
 
-Across all experiments, the agent never gets above 17.5% success rate. The main issue seems to be that the agent never fully learns to avoid obstacles — it just tries to reach the goal as fast as possible and occasionally makes it through.
+The v2 changes have a clear positive effect in E1 — the agent handles different obstacle densities noticeably better than in v1. E3 generalization is mostly stable or slightly improved. The regressions in E2 (slow obstacles) and E4 (shaping) both point to the proximity penalty needing better tuning: with slow or dense obstacles the agent gets penalized a lot without having learned how to avoid them, which ends up hurting performance.
 
----
+The 24-ray LIDAR and obstacle velocity observations do seem to be helping — the additional LIDAR rays and obstacle velocity observations may allow the agent to react earlier to moving obstacles, which explains the E1 gains. For a next version, curriculum learning (starting from N=0 and gradually increasing difficulty) could help the agent first learn basic navigation before dealing with the full penalty signal, which might fix the slow-obstacle regression seen in E2.
 
-**Identified limitations**
-
-With only 8 lidar rays, the agent has 45° blind spots where obstacles can approach without being detected. The observation space does not include obstacle velocity, so the agent has no way to predict where an obstacle is heading. The reward signal only distinguishes between success and collision, with no intermediate feedback for near-miss situations, which makes it hard for the agent to learn that staying far from obstacles is generally beneficial. Finally, training on a single fixed configuration (N=6, speed=1.0) makes the policy brittle to distribution shift, as the E3 results clearly show.
+Results should be interpreted with the understanding that each configuration was evaluated over 200 episodes, so small differences may reflect evaluation variance.
 
 ---
