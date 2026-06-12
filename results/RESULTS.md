@@ -15,7 +15,7 @@ Compared to v1.0-baseline, this version introduces three changes: LIDAR resoluti
 | Observation space | 24 lidar rays, agent velocity, target direction, 3 nearest obstacle velocities |
 | Action space | Continuous velocity control |
 | Base training config | N=6 obstacles, speed=1.0 |
-| Total timesteps | 3,000,000 |
+| Total timesteps | 3 000 000 |
 
 ---
 
