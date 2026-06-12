@@ -8,9 +8,11 @@ The robot learns a reactive navigation policy entirely through trial and error i
 
 ## Environment
 
-The environment is built from scratch as a custom Gymnasium environment — a 2D space where the robot has to find its way to a target while dealing with both walls and moving obstacles. To sense its surroundings, the agent uses a simulated LIDAR with 24 rays that measure how far the nearest obstacle is in each direction. Training runs with PPO through Stable-Baselines3, with 8 environments running in parallel to speed things up. The experiments cover a few different scenarios — changing how many obstacles there are, how fast they move, and testing whether the agent can handle layouts it has never seen before. At the end, the results are visualized through learning curves and trajectory plots to get a clearer picture of what the agent actually learned.
+The environment is built from scratch as a custom Gymnasium environment. It's a 2D space where the robot has to find its way to a target while dealing with both walls and moving obstacles. To sense its surroundings, the agent uses a simulated LIDAR with 24 rays that measure the distance to the nearest obstacle in each direction. It also receives the velocities of the 3 nearest dynamic obstacles, so it has some sense of where they're heading and not just how close they are.
 
-Each episode starts with a randomized agent position and target, preventing the agent from memorizing specific scenarios.
+Training runs with PPO through Stable-Baselines3, with 8 environments running in parallel to speed things up. The experiments cover a few different scenarios — changing how many obstacles there are, how fast they move, and testing whether the agent can handle layouts it has never seen before. Results are visualized through learning curves and trajectory plots.
+
+Each episode starts with a randomized agent position and target, so the agent can't just memorize specific scenarios.
 
 | Element | Description |
 |---|---|
@@ -28,9 +30,9 @@ s = [dx, dy, vx, vy, l1...l24, ovx1, ovy1, ovx2, ovy2, ovx3, ovy3]
 - `dx, dy` — relative position of the target (normalized by world size)
 - `vx, vy` — current agent velocity (normalized by max speed)
 - `l1...l24` — LIDAR readings at 15° intervals (normalized by lidar range)
-- `ovx1, ovy1...ovx3, ovy3` — velocity of the 3 nearest dynamic obstacles (normalized; zero-padded if fewer than 3 present)
+- `ovx1, ovy1...ovx3, ovy3` — velocity of the 3 nearest dynamic obstacles (normalized; zero-padded if fewer than 3 are present)
 
-Total observation size: **34** (up from 12 in v1)
+Total observation size: **34** (up from 12 in v1.0-baseline)
 
 **Action space:** continuous vector `[vx, vy] ∈ [−1, 1]²`
 
@@ -39,8 +41,8 @@ Total observation size: **34** (up from 12 in v1)
 ```
 +10.0        reaching the target
 −10.0        collision with any obstacle (episode ends)
-+0.1·Δd      progress toward the target (reward shaping)
-−0.01        penalty per timestep (encourages efficiency)
++0.3·Δd      progress toward the target (reward shaping)
+−0.02        penalty per timestep (encourages efficiency)
 −f(d)        proximity penalty, active when closer than danger_zone_radius
 ```
 The proximity penalty `f(d)` scales smoothly from `0` at `danger_zone_radius` to `-proximity_penalty_scale` at contact distance. The idea is to discourage the agent from getting too close to obstacles even when it doesn't actually collide. Both shaping terms are only active when `use_reward_shaping=True`.
@@ -56,6 +58,23 @@ pip install -r requirements.txt
 **Requirements:** 
 - Python 3.10+, see `requirements.txt` for full list.
 ---
+
+## Running
+
+Set `MODE` at the top of `main.py` and run:
+
+```bash
+python main.py
+```
+
+| MODE | What it does |
+|---|---|
+| `"curriculum"` | Only trains the curriculum model, no experiments |
+| `"experiments"` | Runs E1–E4, each trains its own model from scratch |
+| `"all"` | Trains curriculum model, then E1-E4 evaluate that same curriculum model |
+
+---
+
 ## Releases
 
 ### [v1.0-baseline](https://github.com/PetraMicanovic/rl-robot-navigation/releases/tag/v1.0-baseline)
@@ -66,7 +85,7 @@ Initial working version of the environment and training pipeline.
 - Basic reward function: goal, collision, progress shaping, step penalty
 - Experiments E1–E4 covering obstacle density, speed, generalization, and reward shaping
 
-### v2.0-obs-reward 
+### [v2.0-obs-reward](https://github.com/PetraMicanovic/rl-robot-navigation/releases/tag/v2.0-obs-reward)
 
 Major upgrade to observation space and reward function.
 
@@ -76,5 +95,27 @@ Major upgrade to observation space and reward function.
 
 **Reward function** extended with a proximity penalty:
 - Smooth penalty that scales from `0` at `danger_zone_radius` down to `-proximity_penalty_scale` at contact distance — discourages the agent from lingering near obstacles even without colliding
+
+### v3.0-curriculum 
+
+Replaces the fixed two-phase training with a multi-stage curriculum that gradually increases difficulty.
+
+**Curriculum stages** (default):
+
+| Stage | Obstacles | Speed | Timesteps | Threshold |
+|---|---|---|---|---|
+| 1 | 0 | 1.0 | 500 000 | 70% |
+| 2 | 3 | 0.5 | 600 000 | 55% |
+| 3 | 3 | 1.0 | 600 000 | 50% |
+| 4 | 6 | 1.0 | 800 000 | 45% |
+| 5 | 10 | 1.0 | 1 000 000 | — |
+
+Each stage starts from the best model saved in the previous stage, so the agent builds on what it already learned rather than starting from scratch. A threshold column shows the success rate the agent needs to reach before the curriculum considers the stage complete — if the threshold isn't met the agent still advances, but the log will note it.
+
+**Training entry points** (`train.py`):
+- `train()` — single fixed-config run, same as v1/v2
+- `train_curriculum()` — full curriculum pipeline, saves a canonical model alias at `models/ppo_robot_nav_curriculum_shaping.zip`
+
+Experiments E1–E4 are kept but now support two modes: evaluating the curriculum model directly (`train_models=False`) or running the original per-experiment training (`train_models=True`), controlled by `MODE` in `main.py`.
 
 ---
