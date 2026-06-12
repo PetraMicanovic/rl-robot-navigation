@@ -49,7 +49,7 @@ class RobotNavEnv(gym.Env):
 
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 30}
 
-    def __init__(self, config_path = "config.json", n_dynamic_obstacles = None, obstacle_speed = None, render_mode = None, use_reward_shaping = True):   
+    def __init__(self, config_path = "config.json", n_dynamic_obstacles = None, obstacle_speed = None, obstacle_speed_range = None, render_mode = None, use_reward_shaping = True):   
         """
         Initialize the RobotNavEnv environment. Loads all parameters from config.json.
 
@@ -59,7 +59,10 @@ class RobotNavEnv(gym.Env):
         n_dynamic_obstacles: int or None
             Number of moving obstacles
         obstacle_speed: float or None
-            Speed of moving obstacles per timestep
+            Fixed speed of moving obstacles per timestep. Mutually exclusive with obstacle_speed_range.
+        obstacle_speed_range: tuple/list of (float, float) or None
+            (low, high) range from which obstacle speed is sampled uniformly at the start of each episode. When set, obstacle_speed is ignored.
+            self.obstacle_speed is set to mean(range) and used for observation normalization so the agent receives a consistent scale regardless of the sampled episode speed.
         render_mode: str or None
             Rendering mode
         use_reward_shaping: bool
@@ -87,10 +90,21 @@ class RobotNavEnv(gym.Env):
         else:
             self.n_dynamic_obstacles = environment_config["n_dynamic_obstacles"]
 
-        if obstacle_speed is not None:
-            self.obstacle_speed = obstacle_speed
+         # Speed configuration: range takes priority over fixed speed.
+        # self.obstacle_speed is always a float used for observation normalisation.
+        if obstacle_speed_range is not None:
+            low, high = float(obstacle_speed_range[0]), float(obstacle_speed_range[1])
+            if low > high:
+                raise ValueError(f"obstacle_speed_range low ({low}) must be <= high ({high})")
+            self.obstacle_speed_range = (low, high)
+            self.obstacle_speed = (low + high) / 2.0  # normalisation anchor
         else:
-            self.obstacle_speed = environment_config["obstacle_speed"]
+            self.obstacle_speed_range = None
+            if obstacle_speed is not None:
+                self.obstacle_speed = float(obstacle_speed)
+            else:
+                self.obstacle_speed = float(environment_config["obstacle_speed"])
+
 
         # Static obstacles (list of x,y, half_width, half_height)
         self.static_obstacles = []
@@ -126,13 +140,21 @@ class RobotNavEnv(gym.Env):
         self.obstacle_velocities = None
         self.step_count = None
         self.previous_distance = None
-
+        self._episode_speed = self.obstacle_speed  # updated each reset when using range
         self.renderer = None
 
     def reset(self, seed = None):
         """
         Reset the environment to a new random initial state. Places the agent, target and all dynamic obstacles at random positions.
         Each dynamic obstacle gets a random initial velocity direction.
+
+        When obstacle_speed_range is set, the episode speed is sampled uniformly
+        from that range each reset. The sampled speed is stored in
+        self._episode_speed and used only for physics; observation normalisation
+        always uses self.obstacle_speed (the range midpoint) so the agent sees a
+        consistent value scale across episodes.
+
+
 
         Parameters:
         seed: int or None
@@ -146,6 +168,13 @@ class RobotNavEnv(gym.Env):
         """
         super().reset(seed = seed)
 
+        # Sample episode speed from range, or use fixed speed
+        if self.obstacle_speed_range is not None:
+            low, high = self.obstacle_speed_range
+            self._episode_speed = float(self.np_random.uniform(low, high))
+        else:
+            self._episode_speed = self.obstacle_speed
+
         # Place agent and target at random position
         self.agent_position = self._random_free_position()
         self.target_position = self._random_free_position(exclude=[self.agent_position], min_dist=2.0)
@@ -158,10 +187,10 @@ class RobotNavEnv(gym.Env):
 
         self.obstacle_positions = np.array(obstacle_list, dtype=np.float32).reshape(-1, 2)
 
-        # Assign random initial directions to dynamic obstacles
+        # Assign random initial directions to dynamic obstacles using episode speed
         random_angles = self.np_random.uniform(0, 2 * np.pi, self.n_dynamic_obstacles)
-        velocity_x = np.cos(random_angles) * self.obstacle_speed
-        velocity_y = np.sin(random_angles) * self.obstacle_speed
+        velocity_x = np.cos(random_angles) * self._episode_speed
+        velocity_y = np.sin(random_angles) * self._episode_speed
         if self.n_dynamic_obstacles > 0:
             self.obstacle_velocities = np.column_stack([velocity_x, velocity_y]).astype(np.float32)
         else:
@@ -195,6 +224,7 @@ class RobotNavEnv(gym.Env):
             - distance_to_target (float): current distance to target
             - step (int): current step count
             - success (bool): whether the agent reached the target
+            - is_success (bool): same as success; required by SB3 EvalCallback to record per-episode success in evaluations.npz
         """
         self.step_count += 1
 
@@ -231,7 +261,9 @@ class RobotNavEnv(gym.Env):
 
         terminated = False
 
-        if current_distance < self.TARGET_RADIUS:
+        goal_reached = current_distance <self.TARGET_RADIUS
+
+        if goal_reached:
             reward += self.REWARD_GOAL
             terminated = True
         elif self._check_collision():
@@ -243,7 +275,8 @@ class RobotNavEnv(gym.Env):
         info = {
             "distance_to_target": float(current_distance),
             "step": self.step_count,
-            "success": bool(current_distance < self.TARGET_RADIUS)
+            "success": goal_reached,
+            "is_success": goal_reached
         }
 
         if self.render_mode == "human":
@@ -254,6 +287,12 @@ class RobotNavEnv(gym.Env):
     def _get_observation(self):
         """
         Build the normalized observation vector for the current state.
+
+        Obstacle velocities are normalised by self.obstacle_speed (the fixed speed
+        or the midpoint of the speed range), not by the episode speed. This keeps
+        the observation scale consistent across episodes when using speed
+        randomisation, so the agent receives comparable signals regardless of the
+        sampled speed.
 
         Parameters:
         None
@@ -268,8 +307,9 @@ class RobotNavEnv(gym.Env):
         normalized_velocity = self.agent_velocity / self.MAX_SPEED
         normalized_lidar_readings = self._cast_lidar_rays() / self.LIDAR_RANGE
         
-        # Velocities of the N_OBSTACLE_VELOCITIES nearest dynamic obstacles (normalized by obstacle speed)
-        # Zero-padded when fewer obstacles are present
+        # Velocities of the N_OBSTACLE_VELOCITIES nearest dynamic obstacles.
+        # Normalised by self.obstacle_speed (range midpoint or fixed speed) so the scale is stable across episodes.
+        # Zero-padded when fewer obstacles are present.
         obstacle_velocity_flatten = np.zeros(self.N_OBSTACLE_VELOCITIES * 2, dtype=np.float32)
         if self.n_dynamic_obstacles > 0 and self.obstacle_speed > 0:
             distances = np.linalg.norm(self.obstacle_positions - self.agent_position, axis=1)
