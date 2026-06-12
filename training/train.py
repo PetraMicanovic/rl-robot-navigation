@@ -24,11 +24,23 @@ CONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "config.json")
 # Each stage defines obstacle count, speed, timesteps and the success rate threshold the agent must reach before advancing to the next stage.
 # The final stage has no threshold — it always runs to completion.
 DEFAULT_CURRICULUM_STAGES = [
-    {"n_obstacles": 0, "speed": 1.0, "timesteps": 500_000, "threshold": 0.70},
-    {"n_obstacles": 2, "speed": 0.8, "timesteps": 500_000, "threshold": 0.60},
-    {"n_obstacles": 4, "speed": 1.0, "timesteps": 1_000_000, "threshold": 0.55},
-    {"n_obstacles": 6, "speed": 1.0, "timesteps": 1_500_000, "threshold": 0.50},
-    {"n_obstacles": 10, "speed": 1.0, "timesteps": 1_500_000, "threshold": None},
+    # Stage 1: navigation without obstacles
+    {"n_obstacles": 0, "speed": 1.0, "timesteps": 300_000, "threshold": 0.70, "max_retries": 2},
+    # Stage 2: slow obstacles with low density
+    {"n_obstacles": 2, "speed": 0.7, "timesteps": 400_000, "threshold": 0.60, "max_retries": 1},
+    # Stage 3: introduce fast fixed-speed obstacles at low density
+    {"n_obstacles": 3, "speed": 1.5, "timesteps": 500_000, "threshold": 0.40, "max_retries": 1},
+    # Stage 4: variable speed begins — agent learns to generalise across speeds
+    {"n_obstacles": 3, "speed_range": [0.5, 1.7], "timesteps": 500_000, "threshold": 0.35, "max_retries": 1},
+    {"n_obstacles": 4, "speed_range": [0.5, 1.7], "timesteps": 500_000, "threshold": 0.35, "max_retries": 1},
+    # Stage 6-7: training density with variable speed
+    {"n_obstacles": 6, "speed": 1.0, "timesteps": 800_000, "threshold": 0.40, "max_retries": 1},
+    {"n_obstacles": 6, "speed_range": [0.5, 1.7], "timesteps": 800_000, "threshold": 0.35, "max_retries": 1},
+    # Stage 8: bridge to high obstacle density
+    {"n_obstacles": 8, "speed_range": [0.5, 1.7], "timesteps": 700_000, "threshold": 0.28, "max_retries": 1},
+    # Stage 9-10: final stage — no threshold, always runs to completion
+    {"n_obstacles": 10, "speed_range": [0.5, 1.7], "timesteps": 800_000, "threshold": None, "max_retries": 0},
+    {"n_obstacles": 13, "speed_range": [0.5, 1.7], "timesteps": 800_000, "threshold": None, "max_retries": 0},
 ]
 
 def load_config(config_path = CONFIG_PATH):
@@ -92,8 +104,8 @@ def train(n_dynamic_obstacles = None, obstacle_speed = None, pretrained_model_pa
     print()
 
     # Create training and evaluation environments
-    training_env = create_parallel_envs(config, CONFIG_PATH, n_dynamic_obstacles, obstacle_speed, use_reward_shaping)
-    eval_env = create_eval_env(CONFIG_PATH, n_dynamic_obstacles, obstacle_speed, use_reward_shaping)
+    training_env = create_parallel_envs(config, CONFIG_PATH, n_dynamic_obstacles, obstacle_speed, use_reward_shaping = use_reward_shaping)
+    eval_env = create_eval_env(CONFIG_PATH, n_dynamic_obstacles, obstacle_speed, use_reward_shaping = use_reward_shaping)
 
     # Create a new PPO agent or load a pretrained one
     if pretrained_model_path is None:
@@ -145,7 +157,8 @@ def train_curriculum(stages=None, use_reward_shaping=True):
             timesteps (int): maximum timesteps to train for this stage
             threshold (float or None): success rate (0–1) required to advance;
                                        None means always run to completion
-        If None, DEFAULT_CURRICULUM_STAGES is used.
+            max_retries (int): number of extra training passes if threshold missed 
+            If None, DEFAULT_CURRICULUM_STAGES is used.       
     use_reward_shaping: bool
         Passed through to each train() call. If True, includes progress reward and proximity penalty. Should be True for curriculum training.
 
@@ -158,6 +171,7 @@ def train_curriculum(stages=None, use_reward_shaping=True):
 
     config = load_config(CONFIG_PATH)
     model_dir = config["paths"]["model_dir"]
+    log_dir = config["paths"]["log_dir"]
     shaping_tag = _shaping_tag(use_reward_shaping)
 
     os.makedirs(model_dir, exist_ok=True)
@@ -165,47 +179,89 @@ def train_curriculum(stages=None, use_reward_shaping=True):
     # Will be set to the best available model path after each stage
     pretrained_path = None
 
+    total_timesteps_so_far = 0
+
+
     for stage_index, stage in enumerate(stages):
         n_obstacles = stage["n_obstacles"]
-        speed = stage["speed"]
+        speed = stage.get("speed", None)
+        speed_range = stage.get("speed_range", None)
         timesteps = stage["timesteps"]
         threshold = stage["threshold"]
+        max_retries = stage.get("max_retries", 1)
+
+        if speed is None and speed_range is None:
+            raise ValueError(f"Stage {stage_index + 1} must define either 'speed' or 'speed_range'.")
+
+        if speed_range is not None:
+            speed_str = f"range={speed_range}"  
+        else:
+            speed_str = f"fixed={speed}"
 
         print(f"\n{'-'*60}")
         print(f"Curriculum stage {stage_index + 1}/{len(stages)}")
         print(f"N obstacles: {n_obstacles}")
-        print(f"Speed: {speed}")
+        print(f"Speed: {speed_str}")
         print(f"Timesteps: {timesteps:,}")
         if threshold is not None:
             print(f"Threshold: {f'{threshold:.0%}'}")
         else:
-            print(f"Threshold: {'none (final stage)'}")        
+            print(f"Threshold: {'none (final stage)'}")   
+        print(f"  max_retries: {max_retries}")     
         if pretrained_path is not None:
             print(f"Starting from: {pretrained_path}.zip")
 
         # Override total_timesteps for this stage
         config["training"]["total_timesteps"] = timesteps
 
-        training_env = create_parallel_envs(config, CONFIG_PATH, n_obstacles, speed, use_reward_shaping)
-        eval_env = create_eval_env(CONFIG_PATH, n_obstacles, speed, use_reward_shaping)
+        training_env = create_parallel_envs(config, CONFIG_PATH, n_obstacles, speed, speed_range, use_reward_shaping = use_reward_shaping)
+        if speed_range is not None:
+            eval_speed = float(np.mean(speed_range))
+        else:
+            eval_speed = speed
+        eval_env = create_eval_env(CONFIG_PATH, n_obstacles, eval_speed, use_reward_shaping = use_reward_shaping)
 
+        # Build or load agent
         if pretrained_path is None:
-            agent = build_ppo_agent(config, training_env, config["paths"]["log_dir"])
+            agent = build_ppo_agent(config, training_env, log_dir)
         else:
             if not os.path.exists(pretrained_path + ".zip"):
                 raise FileNotFoundError(f"Previous stage model not found: {pretrained_path}.zip")
-            agent = PPO.load(pretrained_path, env=training_env, tensorboard_log=config["paths"]["log_dir"])
+            agent = PPO.load(pretrained_path, env=training_env, tensorboard_log=log_dir)
 
-        stage_suffix = f"curriculum_stage{stage_index + 1}_obs{n_obstacles}_spd{speed}_{shaping_tag}"
-        callbacks = build_callbacks(config, eval_env, n_obstacles, speed)
+        stage_suffix = f"curriculum_stage{stage_index + 1}_obs{n_obstacles}_spd{speed or speed_range}_{shaping_tag}"
+        callbacks = build_callbacks(config, eval_env, n_obstacles, eval_speed)
 
-        agent.learn(
-            total_timesteps=timesteps,
-            callback=callbacks,
-            progress_bar=True,
-            # Keep the global step counter continuous across stages
-            reset_num_timesteps=(pretrained_path is None)
-        )
+        # Retry loop 
+        threshold_met = False
+        for attempt in range(max_retries + 1):
+            if attempt > 0:
+                print(f"Retry {attempt}/{max_retries} — threshold not met, continuing on same config.")
+
+            agent.learn(
+                total_timesteps=timesteps,
+                callback=callbacks,
+                progress_bar=True,
+                reset_num_timesteps=False,  # always keep global counter
+            )
+            total_timesteps_so_far += timesteps
+
+            if threshold is None:
+                threshold_met = True
+                break
+
+            rate = _read_success_rate(config, n_obstacles, eval_speed)
+            print(f"  Eval success rate: {rate:.1%}  (threshold: {threshold:.0%})")
+
+            if rate >= threshold:
+                print("Threshold met — advancing to next stage.")
+                threshold_met = True
+                break
+            elif attempt < max_retries:
+                print(f"Threshold not met — will retry ({attempt + 1}/{max_retries}).")
+
+        if not threshold_met:
+            print(f"Threshold not met after {max_retries + 1} attempt(s) — advancing anyway.")
 
         # Save end-of-stage model
         stage_model_path = os.path.join(model_dir, f"ppo_robot_nav_{stage_suffix}")
@@ -214,6 +270,8 @@ def train_curriculum(stages=None, use_reward_shaping=True):
             "stage": stage_index + 1,
             "n_obstacles": n_obstacles,
             "speed": speed,
+            "speed_range": speed_range,
+            "threshold_met": threshold_met,
             "tb_log_folder": agent.logger.dir,
         })
         print(f"\nStage {stage_index + 1} complete. Model saved to: {stage_model_path}.zip")
@@ -222,27 +280,57 @@ def train_curriculum(stages=None, use_reward_shaping=True):
         eval_env.close()
 
         # Check threshold: use best model from EvalCallback if available, otherwise fall back to the end-of-stage model for the next stage
-        best_model_dir = os.path.join(model_dir, f"best_obs{n_obstacles}_spd{speed}", "best_model")
+        best_model_dir = os.path.join(model_dir, f"best_obs{n_obstacles}_spd{eval_speed}", "best_model")
         if os.path.exists(best_model_dir + ".zip"):
             pretrained_path = best_model_dir
             print(f"Using best model for next stage: {best_model_dir}.zip")
         else:
             pretrained_path = stage_model_path
 
-        # If a threshold is set and the best eval reward already exceeds it, skip remaining timesteps in this stage.
-        # SB3 EvalCallback saves evaluations to a numpy file we can read.
-        if threshold is not None and stage_index < len(stages) - 1:
-            _check_threshold(config, n_obstacles, speed, threshold)
-
-    # Save a canonical alias at a stable path so experiment files do not need to know which stage number was the last one
+    # Canonical alias 
     alias = os.path.join(model_dir, f"ppo_robot_nav_curriculum_{shaping_tag}")
     shutil.copy2(pretrained_path + ".zip", alias + ".zip")
 
     print(f"\n{'-'*60}")
     print(f"Curriculum training complete.")
     print(f"Final model: {pretrained_path}.zip")
+    print(f"Alias: {alias}.zip")
 
     return alias
+
+def _read_success_rate(config, n_obstacles, speed):
+    """
+    Read the most recent success rate from EvalCallback's evaluations.npz.
+
+    Prefers the "successes" field (exact per-episode is_success flags written when info_keywords=("is_success",) is set on VecMonitor) over the reward
+    heuristic used in v3, which was inaccurate when shaping rewards dominated.
+
+    Parameters
+    config: dict
+    n_obstacles: int
+    speed: float
+
+    Returns
+    float
+        Success rate in [0, 1], or 0.0 if the file does not exist yet.
+    """
+    eval_log_path = os.path.join(
+        config["paths"]["log_dir"],
+        f"eval_obs{n_obstacles}_spd{speed}",
+        "evaluations.npz",
+    )
+    if not os.path.exists(eval_log_path):
+        return 0.0
+
+    evals = np.load(eval_log_path)
+
+    if "successes" in evals and evals["successes"].size > 0:
+        # Shape: (n_evals, n_eval_episodes) — take the most recent eval row
+        return float(evals["successes"][-1].mean())
+
+    # Fallback: reward heuristic (less accurate, kept for backward compat)
+    best_mean_reward = float(np.max(evals["results"].mean(axis=1)))
+    return max(0.0, best_mean_reward) / config["reward"]["goal"]
 
 def _model_suffix(n_obstacles, speed, shaping_tag):
     """
@@ -279,48 +367,6 @@ def _save_meta(model_path, data):
     """
     with open(model_path + "_meta.json", "w") as f:
         json.dump(data, f, indent=2)
-
-
-def _check_threshold(config, n_obstacles, speed, threshold):
-    """
-    Read EvalCallback's evaluations.npz and log whether the success-rate
-    threshold was reached for the current curriculum stage.
-
-    This function is informational only — the curriculum always advances
-    to the next stage regardless of the result.
-
-    The success rate is approximated from the mean eval reward using:
-        success_rate ≈ max(0, best_mean_reward) / reward["goal"]
-    This is a heuristic: it works best when most reward comes from the
-    goal signal (10.0 by default) rather than shaping terms.
-
-    Parameters
-    config : dict
-        Full configuration dictionary (used for log_dir and reward.goal).
-    n_obstacles : int
-        Number of dynamic obstacles in the current stage.
-    speed : float
-        Obstacle speed in the current stage.
-    threshold : float
-        Target success rate (0–1) to reach before advancing.
-    """
-    eval_log_path = os.path.join(
-        config["paths"]["log_dir"],
-        f"eval_obs{n_obstacles}_spd{speed}",
-        "evaluations.npz",
-    )
-    if not os.path.exists(eval_log_path):
-        return
-
-    evals = np.load(eval_log_path)
-    best_mean_reward   = float(np.max(evals["results"].mean(axis=1)))
-    approx_success_rate = max(0.0, best_mean_reward) / config["reward"]["goal"]
-    print(f"Best eval success rate estimate : {approx_success_rate:.1%}  "
-          f"(threshold: {threshold:.0%})")
-    if approx_success_rate >= threshold:
-        print("Threshold reached — advancing to next stage.")
-    else:
-        print("Threshold not yet reached — continuing curriculum.")
 
 def _shaping_tag(use_reward_shaping):
     """
