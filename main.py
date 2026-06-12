@@ -5,7 +5,7 @@ Set MODE to control what runs:
 
   "curriculum"  — trains the curriculum model only (use this first).
   "experiments" — runs all four experiments using already-trained models.
-  "all"         — trains the curriculum model, then runs all experiments.
+  "all" — trains the curriculum model, then runs all experiments.
 
 Typical workflow:
   1. Set MODE = "curriculum" and run to train the model.
