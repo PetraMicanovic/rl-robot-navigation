@@ -2,7 +2,7 @@
 
 This document summarizes the results of four experiments run to evaluate a PPO-based robot navigation agent trained with the v3.0 curriculum. All experiments use 200 evaluation episodes with a deterministic policy.
 
-Compared to v2.0-obs-reward, this version replaces the fixed two-phase training with a multi-stage curriculum that gradually increases the number and speed of obstacles across 10 stages.
+Compared to v2.0-obs-reward, this version replaces the fixed two-phase training with a multi-stage curriculum that gradually increases the number and speed of obstacles across 5 stages.
 
 ---
 
@@ -14,9 +14,8 @@ Compared to v2.0-obs-reward, this version replaces the fixed two-phase training 
 | Network | MLP `[256, 256]` |
 | Observation space | 24 lidar rays, agent velocity, target direction, 3 nearest obstacle velocities |
 | Action space | Continuous velocity control |
-| Curriculum stages | 10 (N=0 -> N=2 -> N=3 -> ... -> N=13, with variable speed from stage 4) |
-| Total timesteps | ~ 6 300 000 |
-
+| Curriculum stages | 5 (N=0 -> N=3 -> N=3 -> N=6 -> N=10, speed increases from stage 2) |
+| Total timesteps | ~ 3 500 000 |
 ---
 
 ## E1 — Effect of obstacle density
