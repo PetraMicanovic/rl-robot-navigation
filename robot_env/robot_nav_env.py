@@ -228,11 +228,20 @@ class RobotNavEnv(gym.Env):
         """
         self.step_count += 1
 
-        # Clip action to valid range and apply to agent
         action = np.clip(action, -1.0, 1.0).astype(np.float32)
         self.agent_velocity = action * self.MAX_SPEED
+        new_position = self.agent_position + self.agent_velocity
+
+        # Check wall collision before clamping
+        wall_collision = (
+            new_position[0] < self.AGENT_RADIUS or
+            new_position[0] > self.WORLD_SIZE - self.AGENT_RADIUS or
+            new_position[1] < self.AGENT_RADIUS or
+            new_position[1] > self.WORLD_SIZE - self.AGENT_RADIUS
+        )
+
         self.agent_position = np.clip(
-            self.agent_position + self.agent_velocity,
+            new_position,
             self.AGENT_RADIUS,
             self.WORLD_SIZE - self.AGENT_RADIUS
         )
@@ -266,7 +275,7 @@ class RobotNavEnv(gym.Env):
         if goal_reached:
             reward += self.REWARD_GOAL
             terminated = True
-        elif self._check_collision():
+        elif wall_collision or self._check_collision():
             reward += self.REWARD_COLLISION
             terminated = True
 
@@ -505,18 +514,6 @@ class RobotNavEnv(gym.Env):
         bool
             True if a collision is detected, False otherwise.
         """
-        agent_margin = self.AGENT_RADIUS
-
-        # Check collision with world boundary walls
-        if self.agent_position[0] < agent_margin:
-            return True
-        if self.agent_position[0] > self.WORLD_SIZE - agent_margin:
-            return True
-        if self.agent_position[1] < agent_margin:
-            return True
-        if self.agent_position[1] > self.WORLD_SIZE - agent_margin:
-            return True
-
         # Check collision with each dynamic circular obstacle
         combined_radius = self.AGENT_RADIUS + self.OBSTACLE_RADIUS
         for obstacle_position in self.obstacle_positions:
