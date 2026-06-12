@@ -165,7 +165,6 @@ def train_curriculum(stages=None, use_reward_shaping=True):
             threshold (float or None): success rate (0–1) required to advance;
                                        None means always run to completion
             max_retries (int): number of extra training passes if threshold missed 
-            If None, DEFAULT_CURRICULUM_STAGES is used.       
     use_reward_shaping: bool
         Passed through to each train() call. If True, includes progress reward and proximity penalty. Should be True for curriculum training.
 
@@ -190,9 +189,6 @@ def train_curriculum(stages=None, use_reward_shaping=True):
     # Path to the model that the next stage will start from.
     # None means build a fresh agent for stage 1.
     pretrained_path = None
-
-    total_timesteps_so_far = 0
-
 
     for stage_index, stage in enumerate(stages):
         n_obstacles = stage["n_obstacles"]
@@ -289,7 +285,6 @@ def train_curriculum(stages=None, use_reward_shaping=True):
                 progress_bar=True,
                 reset_num_timesteps=False,  # keep global timestep counter
             )
-            total_timesteps_so_far += timesteps
 
             if threshold is None:
                 threshold_met = True
