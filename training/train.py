@@ -215,7 +215,7 @@ def train_curriculum(stages=None, use_reward_shaping=True):
             print(f"Threshold: {f'{threshold:.0%}'}")
         else:
             print(f"Threshold: {'none (final stage)'}")   
-        print(f"  max_retries: {max_retries}")     
+        print(f"max_retries: {max_retries}")     
         if pretrained_path is not None:
             print(f"Starting from: {pretrained_path}.zip")
 
@@ -264,7 +264,7 @@ def train_curriculum(stages=None, use_reward_shaping=True):
                         custom_objects={"ent_coef": curriculum_ent_coef},
                     )
                 else:
-                    print("  No best model found — continuing from end-of-previous-attempt weights.")
+                    print("No best model found — continuing from end-of-previous-attempt weights.")
 
             # Rebuild callbacks with a per-attempt log path so that evaluations.npz is fresh and _read_success_rate() is accurate.
             attempt_log_suffix = (f"obs{n_obstacles}_spd{eval_speed}_attempt{attempt}")
