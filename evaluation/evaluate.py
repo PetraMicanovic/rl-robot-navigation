@@ -1,6 +1,7 @@
 """
 Evaluation module for a trained PPO agent in RobotNavEnv.
-Loads a trained model, evaluates it over a fixed number of episodes, collects aggregate and per-episode metrics and saves evaluation results to a JSON file.
+Loads a trained model, evaluates it over a fixed number of episodes, collects aggregate and per-episode metrics and saves evaluation 
+results to a JSON file.
 """
 
 import os

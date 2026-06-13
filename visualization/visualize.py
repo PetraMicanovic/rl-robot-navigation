@@ -1,6 +1,5 @@
 """
-Visualization module for PPO robot navigation experiments.
-Generates PNG figures from evaluation results (JSON) and training logs.
+Visualization module for PPO robot navigation experiments. Generates PNG figures from evaluation results (JSON) and training logs.
 Saves all figures to results/figures/.
 """
 import os
@@ -50,8 +49,7 @@ def _load_eval_npz(log_key):
     """
     Load the EvalCallback checkpoint file (evaluations.npz) from logs/.
 
-    Stable-Baselines3 EvalCallback saves one npz file per training run under
-    logs/<log_key>/evaluations.npz. The file contains:
+    Stable-Baselines3 EvalCallback saves one npz file per training run under logs/<log_key>/evaluations.npz. The file contains:
       - timesteps: 1-D array of training steps at which eval was run
       - results: 2-D array (n_evals, n_eval_episodes) with per-episode rewards
       - ep_lengths: 2-D array (n_evals, n_eval_episodes) with per-episode lengths
@@ -84,8 +82,7 @@ def _load_tb_scalar(log_path, tag):
     """
     Load a scalar time series from a TensorBoard event file.
 
-    Used for reading rollout/ep_rew_mean from PPO_* log folders, which are
-    not saved as npz (only EvalCallback folders have npz files).
+    Used for reading rollout/ep_rew_mean from PPO_* log folders, which are not saved as npz (only EvalCallback folders have npz files).
     Requires tensorboard to be installed; returns (None, None) silently if not.
 
     Parameters
@@ -132,7 +129,8 @@ def _smooth(values, window=7):
     values: array-like
         Raw scalar values (e.g. per-iteration rewards).
     window: int
-        Number of points to average over. Larger values produce a smoother curve but lag behind sudden changes. Default 7 works well for ~180 data points over 3M timesteps.
+        Number of points to average over. Larger values produce a smoother curve but lag behind sudden changes. Default 7 works well
+        for ~180 data points over 3M timesteps.
 
     Returns
     np.ndarray
@@ -320,7 +318,8 @@ def plot_e3_metrics():
 
 def plot_e4_metrics():
     """
-    E4 — bar charts comparing success rate, average episode length and average collisions between the model trained with reward shaping and the one trained without.
+    E4 — bar charts comparing success rate, average episode length and average collisions between the model trained with reward 
+    shaping and the one trained without.
     """
     configs = [
         ("With shaping", "e4/eval_obs6_spd1.0_shaping.json"),
@@ -477,10 +476,10 @@ def plot_e4_training_curves():
 
 def plot_all_eval_curves():
     """
-    Overview figure — EvalCallback reward curves for all available npz logs
-    in a single plot, for cross-experiment comparison.
+    Overview figure — EvalCallback reward curves for all available npz logs in a single plot, for cross-experiment comparison.
 
-    Colors and line styles are assigned automatically by index so all series remain visually distinct without requiring manual configuration.
+    Colors and line styles are assigned automatically by index so all series remain visually distinct without requiring manual 
+    configuration.
     """
     pattern = os.path.join(LOGS_DIR, "eval_*", "evaluations.npz")
     npz_files = sorted(glob.glob(pattern))

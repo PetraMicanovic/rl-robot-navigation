@@ -5,8 +5,8 @@ Provides two entry points:
   - train(): single-run training for a fixed environment config.
   - train_curriculum(): multi-stage curriculum that progressively increases difficulty.
 
-Both functions load hyperparameters from config.json, build environments,
-initialize or resume a PPO agent, run learning, and save the trained model.
+Both functions load hyperparameters from config.json, build environments, initialize or resume a PPO agent, run learning and save the
+ trained model.
 """
 import os
 import json
@@ -21,8 +21,8 @@ from stable_baselines3 import PPO
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "config.json")
 
 # Default curriculum stages for v3 training.
-# Each stage defines obstacle count, speed, timesteps and the success rate threshold the agent must reach before advancing to the next stage.
-# The final stage has no threshold — it always runs to completion.
+# Each stage defines obstacle count, speed, timesteps and the success rate threshold the agent must reach before advancing to the next
+# stage. The final stage has no threshold — it always runs to completion.
 DEFAULT_CURRICULUM_STAGES = [
     # Stage 1: pure navigation — no obstacles, agent learns to reach the target
     {"n_obstacles": 0, "speed": 1.0, "timesteps": 500_000, "threshold": 0.70, "max_retries": 2},
@@ -56,8 +56,7 @@ def train(n_dynamic_obstacles = None, obstacle_speed = None, pretrained_model_pa
     """
     Main training pipeline.
 
-    Loads config, creates environments and agent, runs training,
-    and saves the final model.
+    Loads config, creates environments and agent, runs training and saves the final model.
 
     Parameters
     n_dynamic_obstacles: int or None
@@ -114,8 +113,8 @@ def train(n_dynamic_obstacles = None, obstacle_speed = None, pretrained_model_pa
             tensorboard_log=log_dir,
             custom_objects={"ent_coef": config["training"]["ent_coef"]},
         )
-    # Pass n_eval_episodes explicitly so train() always uses the value from
-    # config["evaluation"] and is never affected by curriculum overrides.
+    # Pass n_eval_episodes explicitly so train() always uses the value from config["evaluation"] and is never affected by curriculum 
+    # overrides.
     callbacks = build_callbacks(
         config,
         eval_env,
@@ -123,7 +122,6 @@ def train(n_dynamic_obstacles = None, obstacle_speed = None, pretrained_model_pa
         obstacle_speed,
         n_eval_episodes=config["evaluation"]["n_eval_episodes"],
     )
-
 
     # Run training
     print("Starting training...")
@@ -146,14 +144,16 @@ def train_curriculum(stages=None, use_reward_shaping=True):
     """
     Multi-stage curriculum training pipeline (v3).
 
-    Trains the agent progressively through stages of increasing difficulty.
-    Each stage starts from the model saved in the previous stage, so the agent builds on what it already learned rather than starting from scratch.
+    Trains the agent progressively through stages of increasing difficulty. Each stage starts from the model saved in the previous 
+    stage, so the agent builds on what it already learned rather than starting from scratch.
 
-    After all stages complete, the final model is copied to a canonical alias so that experiment files can reference a stable, predictable path:
+    After all stages complete, the final model is copied to a canonical alias so that experiment files can reference a stable, 
+    predictable path:
         models/ppo_robot_nav_curriculum_shaping.zip      (use_reward_shaping=True)
         models/ppo_robot_nav_curriculum_no_shaping.zip   (use_reward_shaping=False)
 
-    A stage is skipped to the next one early if the best model saved by EvalCallback already exceeds the stage threshold — this avoids wasting timesteps when the agent has already mastered the current difficulty.
+    A stage is skipped to the next one early if the best model saved by EvalCallback already exceeds the stage threshold — this avoids 
+    wasting timesteps when the agent has already mastered the current difficulty.
 
     Parameters
     stages: list of dict or None
@@ -166,7 +166,8 @@ def train_curriculum(stages=None, use_reward_shaping=True):
                                        None means always run to completion
             max_retries (int): number of extra training passes if threshold missed 
     use_reward_shaping: bool
-        Passed through to each train() call. If True, includes progress reward and proximity penalty. Should be True for curriculum training.
+        Passed through to each train() call. If True, includes progress reward and proximity penalty. Should be True for curriculum 
+        training.
 
     Returns
     str
@@ -243,8 +244,8 @@ def train_curriculum(stages=None, use_reward_shaping=True):
                 custom_objects={"ent_coef": curriculum_ent_coef}
             )
         stage_suffix = f"curriculum_stage{stage_index + 1}_obs{n_obstacles}_spd{speed or speed_range}_{shaping_tag}"
-        # Canonical best-model directory for this stage (shared across retries
-        # so EvalCallback always updates the same "global best" for the stage).
+        # Canonical best-model directory for this stage (shared across retries so EvalCallback always updates the same "global best"
+        # for the stage).
         best_model_dir = os.path.join(model_dir, f"best_obs{n_obstacles}_spd{eval_speed}")
 
         # Retry loop 
@@ -381,7 +382,8 @@ def _model_suffix(n_obstacles, speed, shaping_tag):
     """
     Build the canonical model filename suffix.
 
-    Returns a string of the form ``obs{n}_spd{speed}_{shaping_tag}`` used consistently across train(), train_curriculum() and experiment files.
+    Returns a string of the form ``obs{n}_spd{speed}_{shaping_tag}`` used consistently across train(), train_curriculum() and 
+    experiment files.
 
     Parameters
     n_obstacles: int
@@ -401,7 +403,8 @@ def _save_meta(model_path, data):
     """
     Write a JSON sidecar file alongside a saved model.
 
-    The sidecar records metadata such as the TensorBoard log folder and curriculum stage, which are useful for debugging and result analysis.
+    The sidecar records metadata such as the TensorBoard log folder and curriculum stage, which are useful for debugging and result 
+    analysis.
 
     Parameters
     model_path: str

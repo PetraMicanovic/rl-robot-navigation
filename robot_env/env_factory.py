@@ -11,8 +11,7 @@ from robot_env.robot_nav_env import RobotNavEnv
 
 def make_env(config_path, n_dynamic_obstacles, obstacle_speed=None, obstacle_speed_range = None, rank=0, seed=0, use_reward_shaping=True):
     """
-    Factory function used by SubprocVecEnv to create parallel RobotNavEnv instances.
-    Each environment receives a different random seed.
+    Factory function used by SubprocVecEnv to create parallel RobotNavEnv instances. Each environment receives a different random seed.
 
     Parameters
     config_path: str
@@ -53,7 +52,8 @@ def create_parallel_envs(config, config_path, n_dynamic_obstacles, obstacle_spee
     """
     Create a vectorized environment with multiple parallel instances.
 
-    Wraps SubprocVecEnv with VecMonitor. info_keywords=("is_success",) is required so that EvalCallback records per-episode success rates in evaluations.npz, which is used by the curriculum threshold logic.
+    Wraps SubprocVecEnv with VecMonitor. info_keywords=("is_success",) is required so that EvalCallback records per-episode success 
+    rates in evaluations.npz, which is used by the curriculum threshold logic.
 
     Parameters
     config: dict
@@ -80,7 +80,8 @@ def create_parallel_envs(config, config_path, n_dynamic_obstacles, obstacle_spee
 
     env_factory_list = []
     for i in range(number_of_envs):
-        env_factory_list.append(make_env(config_path = config_path, n_dynamic_obstacles = n_dynamic_obstacles, obstacle_speed = obstacle_speed, obstacle_speed_range = obstacle_speed_range, rank=i, use_reward_shaping = use_reward_shaping))
+        env_factory_list.append(make_env(config_path = config_path, n_dynamic_obstacles = n_dynamic_obstacles, obstacle_speed = obstacle_speed,
+                                        obstacle_speed_range = obstacle_speed_range, rank=i, use_reward_shaping = use_reward_shaping))
 
     parallel_env = SubprocVecEnv(env_factory_list)
     monitored_env = VecMonitor(parallel_env, filename=os.path.join(log_dir, "monitor"), info_keywords=("is_success",),)
@@ -98,9 +99,8 @@ def create_eval_env(config_path, n_dynamic_obstacles, obstacle_speed=None, obsta
     n_dynamic_obstacles: int
         Number of dynamic obstacles.
     obstacle_speed: float or None
-        Fixed speed used for eval. When obstacle_speed_range is provided,
-        this is ignored and the range midpoint is used as the fixed eval speed
-        so that eval episodes are comparable across curriculum stages.
+        Fixed speed used for eval. When obstacle_speed_range is provided, this is ignored and the range midpoint is used as the fixed
+         eval speed so that eval episodes are comparable across curriculum stages.
     obstacle_speed_range: tuple of (float, float) or None
     use_reward_shaping: bool
         If True, adds progress reward toward the target.
@@ -128,6 +128,6 @@ def create_eval_env(config_path, n_dynamic_obstacles, obstacle_speed=None, obsta
         use_reward_shaping=use_reward_shaping
     )
     eval_env = DummyVecEnv([env_factory])
-    
+
 
     return VecMonitor(eval_env, info_keywords=("is_success",))
