@@ -16,9 +16,12 @@ Action space:
 Reward:
     +10.00: reaching the target
     -10.00: collision with any obstacle
-    +0.1 * delta_d: progress toward the target (if use_reward_shaping=True)
-    -0.01: penality per timestep
-    proximity penalty:  smooth penalty scaling from 0 at danger_zone_radius to proximity_penalty_scale at contact distance (if use_reward_shaping=True)
+    +0.3 * delta_d: progress toward the target (if use_reward_shaping=True)
+    -0.02: penality per timestep
+    proximity penalty:  smooth quadratic penalty scaling from 0 at danger_zone_radius to proximity_penalty_scale at contact distance 
+    (if use_reward_shaping=True)
+    velocity-aware penalty: additional penalty when an obstacle inside the danger zone is moving toward the agent;
+                            scales with approach speed and proximity (if use_reward_shaping=True)
 
 """
 import numpy as np
@@ -49,7 +52,8 @@ class RobotNavEnv(gym.Env):
 
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 30}
 
-    def __init__(self, config_path = "config.json", n_dynamic_obstacles = None, obstacle_speed = None, obstacle_speed_range = None, render_mode = None, use_reward_shaping = True):   
+    def __init__(self, config_path = "config.json", n_dynamic_obstacles = None, obstacle_speed = None, obstacle_speed_range = None, 
+                render_mode = None, use_reward_shaping = True):   
         """
         Initialize the RobotNavEnv environment. Loads all parameters from config.json.
 
@@ -62,7 +66,8 @@ class RobotNavEnv(gym.Env):
             Fixed speed of moving obstacles per timestep. Mutually exclusive with obstacle_speed_range.
         obstacle_speed_range: tuple/list of (float, float) or None
             (low, high) range from which obstacle speed is sampled uniformly at the start of each episode. When set, obstacle_speed is ignored.
-            self.obstacle_speed is set to mean(range) and used for observation normalization so the agent receives a consistent scale regardless of the sampled episode speed.
+            self.obstacle_speed is set to mean(range) and used for observation normalization so the agent receives a consistent scale regardless
+            of the sampled episode speed.
         render_mode: str or None
             Rendering mode
         use_reward_shaping: bool
@@ -148,13 +153,9 @@ class RobotNavEnv(gym.Env):
         Reset the environment to a new random initial state. Places the agent, target and all dynamic obstacles at random positions.
         Each dynamic obstacle gets a random initial velocity direction.
 
-        When obstacle_speed_range is set, the episode speed is sampled uniformly
-        from that range each reset. The sampled speed is stored in
-        self._episode_speed and used only for physics; observation normalisation
-        always uses self.obstacle_speed (the range midpoint) so the agent sees a
-        consistent value scale across episodes.
-
-
+        When obstacle_speed_range is set, the episode speed is sampled uniformly from that range each reset. The sampled speed is 
+        stored in self._episode_speed and used only for physics; observation normalisation always uses self.obstacle_speed (the range
+         midpoint) so the agent sees a consistent value scale across episodes.
 
         Parameters:
         seed: int or None
@@ -260,11 +261,29 @@ class RobotNavEnv(gym.Env):
             
             # Proximity penalty: smooth quadratic penalty when inside danger zone
             if self.n_dynamic_obstacles > 0:
-                dists_to_obs = np.linalg.norm( self.obstacle_positions - self.agent_position, axis=1) - self.OBSTACLE_RADIUS - self.AGENT_RADIUS
+                relative_positions = self.obstacle_positions - self.agent_position
+                dists_to_obs = np.linalg.norm(relative_positions, axis=1) - self.OBSTACLE_RADIUS - self.AGENT_RADIUS
                 clearance = float(np.min(dists_to_obs))
                 if clearance < self.DANGER_ZONE_RADIUS:
                     t = max(0.0, 1.0 - clearance / self.DANGER_ZONE_RADIUS)
                     reward -= self.PROXIMITY_PENALTY_SCALE * (t ** 2)
+
+                # Velocity-aware penalty: penalize when an obstacle is approaching the agent.For each obstacle inside the danger zone,
+                # compute the dot product of the unit vector pointing from the obstacle toward the agent and the obstacle's velocity.
+                # A positive dot product means the obstacle is moving toward the agent — the penalty scales with approach speed and 
+                # proximity.
+                approach_penalty = 0.0
+                for i, clearance_i in enumerate(dists_to_obs):
+                    if clearance_i < self.DANGER_ZONE_RADIUS:
+                        direction_to_agent = -relative_positions[i]
+                        dist = np.linalg.norm(direction_to_agent)
+                        if dist > 1e-6:
+                            direction_to_agent /= dist
+                        approach_speed = float(np.dot(self.obstacle_velocities[i], direction_to_agent))
+                        if approach_speed > 0:
+                            t = max(0.0, 1.0 - clearance_i / self.DANGER_ZONE_RADIUS)
+                            approach_penalty += approach_speed / self._episode_speed * t
+                reward -= self.PROXIMITY_PENALTY_SCALE * approach_penalty
 
         self.previous_distance = current_distance
 
@@ -297,11 +316,9 @@ class RobotNavEnv(gym.Env):
         """
         Build the normalized observation vector for the current state.
 
-        Obstacle velocities are normalised by self.obstacle_speed (the fixed speed
-        or the midpoint of the speed range), not by the episode speed. This keeps
-        the observation scale consistent across episodes when using speed
-        randomisation, so the agent receives comparable signals regardless of the
-        sampled speed.
+        Obstacle velocities are normalised by self.obstacle_speed (the fixed speed or the midpoint of the speed range), not by the 
+        episode speed. This keeps the observation scale consistent across episodes when using speed randomisation, so the agent 
+        receives comparable signals regardless of the sampled speed.
 
         Parameters:
         None
@@ -316,9 +333,8 @@ class RobotNavEnv(gym.Env):
         normalized_velocity = self.agent_velocity / self.MAX_SPEED
         normalized_lidar_readings = self._cast_lidar_rays() / self.LIDAR_RANGE
         
-        # Velocities of the N_OBSTACLE_VELOCITIES nearest dynamic obstacles.
-        # Normalised by self.obstacle_speed (range midpoint or fixed speed) so the scale is stable across episodes.
-        # Zero-padded when fewer obstacles are present.
+        # Velocities of the N_OBSTACLE_VELOCITIES nearest dynamic obstacles. Normalised by self.obstacle_speed (range midpoint or 
+        # fixed speed) so the scale is stable across episodes. Zero-padded when fewer obstacles are present.
         obstacle_velocity_flatten = np.zeros(self.N_OBSTACLE_VELOCITIES * 2, dtype=np.float32)
         if self.n_dynamic_obstacles > 0 and self.obstacle_speed > 0:
             distances = np.linalg.norm(self.obstacle_positions - self.agent_position, axis=1)
@@ -368,8 +384,8 @@ class RobotNavEnv(gym.Env):
 
     def _ray_vs_walls(self, ray_origin, ray_direction):
         """
-        Compute the distance from a ray origin to the nearest world boundary wall. Uses parametric ray-boundary intersection: finds the t value at
-        which the ray hits each wall and returns the smallest positive t.
+        Compute the distance from a ray origin to the nearest world boundary wall. Uses parametric ray-boundary intersection: finds 
+        the t value at which the ray hits each wall and returns the smallest positive t.
 
         Parameters
         ray_origin: np.ndarray (2,)
@@ -419,7 +435,7 @@ class RobotNavEnv(gym.Env):
 
         # Axis-aligned bounding box boundaries
         bounds = [
-            (center_x - half_width, center_x + half_width),   # x-axis slab
+            (center_x - half_width, center_x + half_width), # x-axis slab
             (center_y - half_height, center_y + half_height)  # y-axis slab
         ]
 
@@ -458,8 +474,8 @@ class RobotNavEnv(gym.Env):
 
     def _ray_vs_circle(self, ray_origin, ray_direction, circle_center, circle_radius):
         """
-        Compute the distance from a ray to a circular obstacle. Solves the quadratic equation derived from substituting the
-        parametric ray equation into the circle equation.
+        Compute the distance from a ray to a circular obstacle. Solves the quadratic equation derived from substituting the parametric
+         ray equation into the circle equation.
 
         Parameters
         ray_origin: np.ndarray (2,)
@@ -536,8 +552,8 @@ class RobotNavEnv(gym.Env):
     def _bounce_obstacles(self):
         """
         Reflect dynamic obstacle velocities when they hit world boundaries.
-        For each obstacle, if it has crossed a wall boundary, its position is clamped back to the boundary and the velocity in that dimension
-        is reversed (elastic bounce).
+        For each obstacle, if it has crossed a wall boundary, its position is clamped back to the boundary and the velocity in that 
+        dimension is reversed (elastic bounce).
 
         Parameters
         None
@@ -604,7 +620,8 @@ class RobotNavEnv(gym.Env):
     def render(self):
         """
         Render the current environment state using pygame.
-        Draws the arena, static obstacles (grey rectangles), the target(green circle), dynamic obstacles (orange circles) and the agent (blue circle).
+        Draws the arena, static obstacles (grey rectangles), the target(green circle), dynamic obstacles (orange circles) and the agent
+        (blue circle).
 
         Parameters
         None
@@ -621,9 +638,7 @@ class RobotNavEnv(gym.Env):
         try:
             import pygame
         except ImportError:
-            raise ImportError("pygame is required for rendering. "
-                             "Install it with: pip install pygame"
-            )
+            raise ImportError("pygame is required for rendering. ""Install it with: pip install pygame")
 
         PIXELS_PER_UNIT = 60
         WINDOW_SIZE = int(self.WORLD_SIZE * PIXELS_PER_UNIT)
@@ -676,8 +691,7 @@ class RobotNavEnv(gym.Env):
 
     def close(self):
         """
-        Clean up resources when the environment is no longer needed.
-        Shuts down the pygame display if it was initialized.
+        Clean up resources when the environment is no longer needed. Shuts down the pygame display if it was initialized.
 
         Parameters
         None
