@@ -18,10 +18,8 @@ Reward:
     -10.00: collision with any obstacle
     +0.3 * delta_d: progress toward the target (if use_reward_shaping=True)
     -0.02: penality per timestep
-    proximity penalty:  smooth quadratic penalty scaling from 0 at danger_zone_radius to proximity_penalty_scale at contact distance 
-    (if use_reward_shaping=True)
-    velocity-aware penalty: additional penalty when an obstacle inside the danger zone is moving toward the agent;
-                            scales with approach speed and proximity (if use_reward_shaping=True)
+    proximity penalty: smooth penalty scaling from 0 at danger_zone_radius to proximity_penalty_scale at contact distance 
+                       (if use_reward_shaping=True)
 
 """
 import numpy as np
@@ -53,7 +51,7 @@ class RobotNavEnv(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 30}
 
     def __init__(self, config_path = "config.json", n_dynamic_obstacles = None, obstacle_speed = None, obstacle_speed_range = None, 
-                render_mode = None, use_reward_shaping = True):   
+                 render_mode = None, use_reward_shaping = True):   
         """
         Initialize the RobotNavEnv environment. Loads all parameters from config.json.
 
@@ -65,9 +63,9 @@ class RobotNavEnv(gym.Env):
         obstacle_speed: float or None
             Fixed speed of moving obstacles per timestep. Mutually exclusive with obstacle_speed_range.
         obstacle_speed_range: tuple/list of (float, float) or None
-            (low, high) range from which obstacle speed is sampled uniformly at the start of each episode. When set, obstacle_speed is ignored.
-            self.obstacle_speed is set to mean(range) and used for observation normalization so the agent receives a consistent scale regardless
-            of the sampled episode speed.
+            (low, high) range from which obstacle speed is sampled uniformly at the start of each episode. When set, obstacle_speed 
+            is ignored. self.obstacle_speed is set to mean(range) and used for observation normalization so the agent receives a 
+            consistent scale regardless of the sampled episode speed.
         render_mode: str or None
             Rendering mode
         use_reward_shaping: bool
@@ -261,29 +259,11 @@ class RobotNavEnv(gym.Env):
             
             # Proximity penalty: smooth quadratic penalty when inside danger zone
             if self.n_dynamic_obstacles > 0:
-                relative_positions = self.obstacle_positions - self.agent_position
-                dists_to_obs = np.linalg.norm(relative_positions, axis=1) - self.OBSTACLE_RADIUS - self.AGENT_RADIUS
+                dists_to_obs = np.linalg.norm( self.obstacle_positions - self.agent_position, axis=1) - self.OBSTACLE_RADIUS - self.AGENT_RADIUS
                 clearance = float(np.min(dists_to_obs))
                 if clearance < self.DANGER_ZONE_RADIUS:
                     t = max(0.0, 1.0 - clearance / self.DANGER_ZONE_RADIUS)
                     reward -= self.PROXIMITY_PENALTY_SCALE * (t ** 2)
-
-                # Velocity-aware penalty: penalize when an obstacle is approaching the agent.For each obstacle inside the danger zone,
-                # compute the dot product of the unit vector pointing from the obstacle toward the agent and the obstacle's velocity.
-                # A positive dot product means the obstacle is moving toward the agent — the penalty scales with approach speed and 
-                # proximity.
-                approach_penalty = 0.0
-                for i, clearance_i in enumerate(dists_to_obs):
-                    if clearance_i < self.DANGER_ZONE_RADIUS:
-                        direction_to_agent = -relative_positions[i]
-                        dist = np.linalg.norm(direction_to_agent)
-                        if dist > 1e-6:
-                            direction_to_agent /= dist
-                        approach_speed = float(np.dot(self.obstacle_velocities[i], direction_to_agent))
-                        if approach_speed > 0:
-                            t = max(0.0, 1.0 - clearance_i / self.DANGER_ZONE_RADIUS)
-                            approach_penalty += approach_speed / self._episode_speed * t
-                reward -= self.PROXIMITY_PENALTY_SCALE * approach_penalty
 
         self.previous_distance = current_distance
 
