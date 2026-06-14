@@ -121,6 +121,7 @@ class RobotNavEnv(gym.Env):
         self.REWARD_STEP = reward_config["step_penalty"]
         self.DANGER_ZONE_RADIUS = reward_config["danger_zone_radius"]
         self.PROXIMITY_PENALTY_SCALE = reward_config["proximity_penalty_scale"]
+        self.ACTION_SMOOTHING_SCALE = reward_config.get("action_smoothing_scale", 0.02)
 
         # Number of nearest obstacle velocities to include in observation
         self.N_OBSTACLE_VELOCITIES = 3
@@ -143,6 +144,7 @@ class RobotNavEnv(gym.Env):
         self.obstacle_velocities = None
         self.step_count = None
         self.previous_distance = None
+        self.previous_action = None
         self._episode_speed = self.obstacle_speed  # updated each reset when using range
         self.renderer = None
 
@@ -197,6 +199,7 @@ class RobotNavEnv(gym.Env):
             
         self.step_count = 0
         self.previous_distance  = np.linalg.norm(self.target_position - self.agent_position)
+        self.previous_action = np.zeros(2, dtype=np.float32)
 
         return self._get_observation(), {}
     
@@ -265,6 +268,11 @@ class RobotNavEnv(gym.Env):
                     t = max(0.0, 1.0 - clearance / self.DANGER_ZONE_RADIUS)
                     reward -= self.PROXIMITY_PENALTY_SCALE * (t ** 2)
 
+            # Action smoothing penalty: discourages sudden direction changes
+            action_delta = action - self.previous_action
+            reward -= self.ACTION_SMOOTHING_SCALE * float(np.dot(action_delta, action_delta))
+
+        self.previous_action = action.copy()
         self.previous_distance = current_distance
 
         terminated = False
