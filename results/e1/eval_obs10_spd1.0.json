@@ -1,235 +1,235 @@
 {
-    "success_rate": 0.53,
-    "avg_episode_length": 4.44,
-    "avg_collision_count": 0.47,
-    "n_success": 106,
-    "n_collision": 94,
+    "success_rate": 0.555,
+    "avg_episode_length": 4.5,
+    "avg_collision_count": 0.445,
+    "n_success": 111,
+    "n_collision": 89,
     "n_truncated": 0,
     "n_episodes": 200,
     "episodes": [
         {
             "episode": 1,
             "outcome": "SUCCESS",
-            "steps": 8,
+            "steps": 10,
             "collisions": 0,
-            "final_dist": 0.575251579284668
+            "final_dist": 0.3068676292896271
         },
         {
             "episode": 2,
-            "outcome": "COLLISION",
+            "outcome": "SUCCESS",
             "steps": 3,
-            "collisions": 1,
-            "final_dist": 0.8171324133872986
+            "collisions": 0,
+            "final_dist": 0.5249422192573547
         },
         {
             "episode": 3,
             "outcome": "COLLISION",
             "steps": 4,
             "collisions": 1,
-            "final_dist": 4.949960708618164
+            "final_dist": 5.451276779174805
         },
         {
             "episode": 4,
-            "outcome": "COLLISION",
-            "steps": 2,
-            "collisions": 1,
-            "final_dist": 2.602020263671875
+            "outcome": "SUCCESS",
+            "steps": 3,
+            "collisions": 0,
+            "final_dist": 0.46502184867858887
         },
         {
             "episode": 5,
             "outcome": "SUCCESS",
             "steps": 4,
             "collisions": 0,
-            "final_dist": 0.32851535081863403
+            "final_dist": 0.41918647289276123
         },
         {
             "episode": 6,
             "outcome": "SUCCESS",
             "steps": 2,
             "collisions": 0,
-            "final_dist": 0.3007091283798218
+            "final_dist": 0.15955449640750885
         },
         {
             "episode": 7,
-            "outcome": "COLLISION",
-            "steps": 3,
-            "collisions": 1,
-            "final_dist": 1.8731502294540405
+            "outcome": "SUCCESS",
+            "steps": 4,
+            "collisions": 0,
+            "final_dist": 0.11001560091972351
         },
         {
             "episode": 8,
             "outcome": "SUCCESS",
-            "steps": 4,
+            "steps": 5,
             "collisions": 0,
-            "final_dist": 0.45595401525497437
+            "final_dist": 0.33838990330696106
         },
         {
             "episode": 9,
-            "outcome": "SUCCESS",
-            "steps": 7,
-            "collisions": 0,
-            "final_dist": 0.22087706625461578
+            "outcome": "COLLISION",
+            "steps": 2,
+            "collisions": 1,
+            "final_dist": 4.8047404289245605
         },
         {
             "episode": 10,
             "outcome": "SUCCESS",
-            "steps": 7,
+            "steps": 6,
             "collisions": 0,
-            "final_dist": 0.33417096734046936
+            "final_dist": 0.533293604850769
         },
         {
             "episode": 11,
             "outcome": "SUCCESS",
-            "steps": 5,
+            "steps": 4,
             "collisions": 0,
-            "final_dist": 0.30103129148483276
+            "final_dist": 0.13691288232803345
         },
         {
             "episode": 12,
             "outcome": "SUCCESS",
-            "steps": 5,
+            "steps": 4,
             "collisions": 0,
-            "final_dist": 0.2103019803762436
+            "final_dist": 0.24043378233909607
         },
         {
             "episode": 13,
             "outcome": "COLLISION",
-            "steps": 3,
+            "steps": 4,
             "collisions": 1,
-            "final_dist": 5.682235240936279
+            "final_dist": 5.5847673416137695
         },
         {
             "episode": 14,
             "outcome": "COLLISION",
-            "steps": 3,
+            "steps": 7,
             "collisions": 1,
-            "final_dist": 7.958086013793945
+            "final_dist": 5.041408061981201
         },
         {
             "episode": 15,
             "outcome": "SUCCESS",
             "steps": 6,
             "collisions": 0,
-            "final_dist": 0.5658915042877197
+            "final_dist": 0.3536231815814972
         },
         {
             "episode": 16,
             "outcome": "SUCCESS",
             "steps": 2,
             "collisions": 0,
-            "final_dist": 0.050386734306812286
+            "final_dist": 0.4482496976852417
         },
         {
             "episode": 17,
             "outcome": "SUCCESS",
             "steps": 4,
             "collisions": 0,
-            "final_dist": 0.43671438097953796
+            "final_dist": 0.2764345407485962
         },
         {
             "episode": 18,
-            "outcome": "SUCCESS",
-            "steps": 5,
-            "collisions": 0,
-            "final_dist": 0.19641506671905518
+            "outcome": "COLLISION",
+            "steps": 4,
+            "collisions": 1,
+            "final_dist": 2.1971025466918945
         },
         {
             "episode": 19,
             "outcome": "SUCCESS",
             "steps": 3,
             "collisions": 0,
-            "final_dist": 0.21404464542865753
+            "final_dist": 0.30560576915740967
         },
         {
             "episode": 20,
-            "outcome": "SUCCESS",
-            "steps": 8,
-            "collisions": 0,
-            "final_dist": 0.33334991335868835
+            "outcome": "COLLISION",
+            "steps": 3,
+            "collisions": 1,
+            "final_dist": 4.4288201332092285
         },
         {
             "episode": 21,
             "outcome": "COLLISION",
             "steps": 1,
             "collisions": 1,
-            "final_dist": 2.4314703941345215
+            "final_dist": 2.440136432647705
         },
         {
             "episode": 22,
             "outcome": "COLLISION",
-            "steps": 5,
+            "steps": 4,
             "collisions": 1,
-            "final_dist": 4.580623626708984
+            "final_dist": 5.347610950469971
         },
         {
             "episode": 23,
             "outcome": "SUCCESS",
-            "steps": 6,
+            "steps": 4,
             "collisions": 0,
-            "final_dist": 0.35816681385040283
+            "final_dist": 0.1724306344985962
         },
         {
             "episode": 24,
             "outcome": "SUCCESS",
             "steps": 3,
             "collisions": 0,
-            "final_dist": 0.37468743324279785
+            "final_dist": 0.42943274974823
         },
         {
             "episode": 25,
             "outcome": "SUCCESS",
             "steps": 2,
             "collisions": 0,
-            "final_dist": 0.1634902060031891
+            "final_dist": 0.25379496812820435
         },
         {
             "episode": 26,
             "outcome": "COLLISION",
             "steps": 12,
             "collisions": 1,
-            "final_dist": 0.7823160290718079
+            "final_dist": 0.6887719035148621
         },
         {
             "episode": 27,
-            "outcome": "SUCCESS",
-            "steps": 7,
-            "collisions": 0,
-            "final_dist": 0.2043296992778778
+            "outcome": "COLLISION",
+            "steps": 6,
+            "collisions": 1,
+            "final_dist": 1.3943222761154175
         },
         {
             "episode": 28,
             "outcome": "COLLISION",
             "steps": 8,
             "collisions": 1,
-            "final_dist": 2.741379499435425
+            "final_dist": 2.920313835144043
         },
         {
             "episode": 29,
             "outcome": "SUCCESS",
             "steps": 3,
             "collisions": 0,
-            "final_dist": 0.4239101707935333
+            "final_dist": 0.2615547478199005
         },
         {
             "episode": 30,
             "outcome": "COLLISION",
             "steps": 3,
             "collisions": 1,
-            "final_dist": 1.2826029062271118
+            "final_dist": 1.2429152727127075
         },
         {
             "episode": 31,
             "outcome": "SUCCESS",
             "steps": 3,
             "collisions": 0,
-            "final_dist": 0.21554100513458252
+            "final_dist": 0.19310583174228668
         },
         {
             "episode": 32,
             "outcome": "COLLISION",
             "steps": 4,
             "collisions": 1,
-            "final_dist": 0.6949140429496765
+            "final_dist": 1.0142977237701416
         },
         {
             "episode": 33,
@@ -243,147 +243,147 @@
             "outcome": "COLLISION",
             "steps": 3,
             "collisions": 1,
-            "final_dist": 2.887291431427002
+            "final_dist": 3.0269229412078857
         },
         {
             "episode": 35,
-            "outcome": "COLLISION",
-            "steps": 3,
-            "collisions": 1,
-            "final_dist": 3.913187026977539
+            "outcome": "SUCCESS",
+            "steps": 6,
+            "collisions": 0,
+            "final_dist": 0.19521625339984894
         },
         {
             "episode": 36,
-            "outcome": "SUCCESS",
+            "outcome": "COLLISION",
             "steps": 9,
-            "collisions": 0,
-            "final_dist": 0.34877046942710876
+            "collisions": 1,
+            "final_dist": 0.6431235074996948
         },
         {
             "episode": 37,
             "outcome": "COLLISION",
             "steps": 2,
             "collisions": 1,
-            "final_dist": 4.292887210845947
+            "final_dist": 4.356171607971191
         },
         {
             "episode": 38,
             "outcome": "COLLISION",
             "steps": 1,
             "collisions": 1,
-            "final_dist": 5.477264881134033
+            "final_dist": 5.383991718292236
         },
         {
             "episode": 39,
             "outcome": "SUCCESS",
             "steps": 4,
             "collisions": 0,
-            "final_dist": 0.1648535281419754
+            "final_dist": 0.08111030608415604
         },
         {
             "episode": 40,
             "outcome": "SUCCESS",
             "steps": 2,
             "collisions": 0,
-            "final_dist": 0.3130173683166504
+            "final_dist": 0.38724109530448914
         },
         {
             "episode": 41,
             "outcome": "COLLISION",
-            "steps": 1,
+            "steps": 2,
             "collisions": 1,
-            "final_dist": 3.659911870956421
+            "final_dist": 3.5177018642425537
         },
         {
             "episode": 42,
-            "outcome": "COLLISION",
-            "steps": 2,
-            "collisions": 1,
-            "final_dist": 5.259763240814209
+            "outcome": "SUCCESS",
+            "steps": 8,
+            "collisions": 0,
+            "final_dist": 0.3540197014808655
         },
         {
             "episode": 43,
-            "outcome": "SUCCESS",
-            "steps": 10,
-            "collisions": 0,
-            "final_dist": 0.523145318031311
+            "outcome": "COLLISION",
+            "steps": 5,
+            "collisions": 1,
+            "final_dist": 5.052943229675293
         },
         {
             "episode": 44,
             "outcome": "SUCCESS",
-            "steps": 3,
+            "steps": 4,
             "collisions": 0,
-            "final_dist": 0.5838542580604553
+            "final_dist": 0.4192122519016266
         },
         {
             "episode": 45,
             "outcome": "SUCCESS",
-            "steps": 7,
+            "steps": 6,
             "collisions": 0,
-            "final_dist": 0.4310247302055359
+            "final_dist": 0.5818600058555603
         },
         {
             "episode": 46,
             "outcome": "SUCCESS",
             "steps": 3,
             "collisions": 0,
-            "final_dist": 0.08790045976638794
+            "final_dist": 0.2993347644805908
         },
         {
             "episode": 47,
             "outcome": "SUCCESS",
             "steps": 8,
             "collisions": 0,
-            "final_dist": 0.3069428503513336
+            "final_dist": 0.5298780202865601
         },
         {
             "episode": 48,
             "outcome": "SUCCESS",
-            "steps": 6,
+            "steps": 5,
             "collisions": 0,
-            "final_dist": 0.20743562281131744
+            "final_dist": 0.5187561511993408
         },
         {
             "episode": 49,
-            "outcome": "SUCCESS",
-            "steps": 3,
-            "collisions": 0,
-            "final_dist": 0.3086751699447632
+            "outcome": "COLLISION",
+            "steps": 2,
+            "collisions": 1,
+            "final_dist": 1.351933240890503
         },
         {
             "episode": 50,
             "outcome": "COLLISION",
-            "steps": 3,
+            "steps": 11,
             "collisions": 1,
-            "final_dist": 7.867047309875488
+            "final_dist": 3.0654008388519287
         },
         {
             "episode": 51,
             "outcome": "COLLISION",
-            "steps": 4,
+            "steps": 3,
             "collisions": 1,
-            "final_dist": 2.9978981018066406
+            "final_dist": 3.178971767425537
         },
         {
             "episode": 52,
             "outcome": "SUCCESS",
             "steps": 5,
             "collisions": 0,
-            "final_dist": 0.21601757407188416
+            "final_dist": 0.4353278875350952
         },
         {
             "episode": 53,
             "outcome": "COLLISION",
-            "steps": 5,
+            "steps": 4,
             "collisions": 1,
-            "final_dist": 0.6709573268890381
+            "final_dist": 1.0541661977767944
         },
         {
             "episode": 54,
             "outcome": "COLLISION",
-            "steps": 4,
+            "steps": 5,
             "collisions": 1,
-            "final_dist": 2.5010058879852295
+            "final_dist": 3.3837921619415283
         },
         {
             "episode": 55,
@@ -395,198 +395,198 @@
         {
             "episode": 56,
             "outcome": "COLLISION",
-            "steps": 5,
+            "steps": 4,
             "collisions": 1,
-            "final_dist": 2.3137097358703613
+            "final_dist": 5.061624526977539
         },
         {
             "episode": 57,
-            "outcome": "SUCCESS",
-            "steps": 6,
-            "collisions": 0,
-            "final_dist": 0.5085219144821167
+            "outcome": "COLLISION",
+            "steps": 4,
+            "collisions": 1,
+            "final_dist": 2.261050224304199
         },
         {
             "episode": 58,
             "outcome": "SUCCESS",
-            "steps": 5,
+            "steps": 3,
             "collisions": 0,
-            "final_dist": 0.15766915678977966
+            "final_dist": 0.26211702823638916
         },
         {
             "episode": 59,
-            "outcome": "SUCCESS",
-            "steps": 6,
-            "collisions": 0,
-            "final_dist": 0.5088474154472351
+            "outcome": "COLLISION",
+            "steps": 2,
+            "collisions": 1,
+            "final_dist": 2.8013088703155518
         },
         {
             "episode": 60,
             "outcome": "SUCCESS",
             "steps": 5,
             "collisions": 0,
-            "final_dist": 0.2847689092159271
+            "final_dist": 0.2222214788198471
         },
         {
             "episode": 61,
             "outcome": "COLLISION",
-            "steps": 5,
+            "steps": 7,
             "collisions": 1,
-            "final_dist": 5.965516090393066
+            "final_dist": 4.404515743255615
         },
         {
             "episode": 62,
-            "outcome": "COLLISION",
-            "steps": 3,
-            "collisions": 1,
-            "final_dist": 3.6550216674804688
+            "outcome": "SUCCESS",
+            "steps": 7,
+            "collisions": 0,
+            "final_dist": 0.33277803659439087
         },
         {
             "episode": 63,
-            "outcome": "COLLISION",
-            "steps": 2,
-            "collisions": 1,
-            "final_dist": 4.83415412902832
+            "outcome": "SUCCESS",
+            "steps": 7,
+            "collisions": 0,
+            "final_dist": 0.5314657688140869
         },
         {
             "episode": 64,
             "outcome": "COLLISION",
             "steps": 3,
             "collisions": 1,
-            "final_dist": 3.6638574600219727
+            "final_dist": 3.468651533126831
         },
         {
             "episode": 65,
             "outcome": "SUCCESS",
             "steps": 4,
             "collisions": 0,
-            "final_dist": 0.16790004074573517
+            "final_dist": 0.45721161365509033
         },
         {
             "episode": 66,
             "outcome": "SUCCESS",
             "steps": 3,
             "collisions": 0,
-            "final_dist": 0.11889481544494629
+            "final_dist": 0.3803030848503113
         },
         {
             "episode": 67,
             "outcome": "SUCCESS",
             "steps": 9,
             "collisions": 0,
-            "final_dist": 0.2688710689544678
+            "final_dist": 0.3553681969642639
         },
         {
             "episode": 68,
             "outcome": "COLLISION",
             "steps": 2,
             "collisions": 1,
-            "final_dist": 0.699614405632019
+            "final_dist": 0.6959018111228943
         },
         {
             "episode": 69,
-            "outcome": "SUCCESS",
-            "steps": 9,
-            "collisions": 0,
-            "final_dist": 0.4644271433353424
+            "outcome": "COLLISION",
+            "steps": 8,
+            "collisions": 1,
+            "final_dist": 1.073731780052185
         },
         {
             "episode": 70,
             "outcome": "SUCCESS",
             "steps": 5,
             "collisions": 0,
-            "final_dist": 0.5948840379714966
+            "final_dist": 0.2124786525964737
         },
         {
             "episode": 71,
             "outcome": "COLLISION",
             "steps": 2,
             "collisions": 1,
-            "final_dist": 4.062064170837402
+            "final_dist": 4.149232864379883
         },
         {
             "episode": 72,
             "outcome": "SUCCESS",
             "steps": 3,
             "collisions": 0,
-            "final_dist": 0.2892220616340637
+            "final_dist": 0.4978814721107483
         },
         {
             "episode": 73,
             "outcome": "SUCCESS",
             "steps": 2,
             "collisions": 0,
-            "final_dist": 0.4890277683734894
+            "final_dist": 0.4351227879524231
         },
         {
             "episode": 74,
             "outcome": "SUCCESS",
             "steps": 8,
             "collisions": 0,
-            "final_dist": 0.27721500396728516
+            "final_dist": 0.18560482561588287
         },
         {
             "episode": 75,
             "outcome": "SUCCESS",
             "steps": 5,
             "collisions": 0,
-            "final_dist": 0.4463560879230499
+            "final_dist": 0.5327324867248535
         },
         {
             "episode": 76,
             "outcome": "COLLISION",
             "steps": 5,
             "collisions": 1,
-            "final_dist": 1.6652628183364868
+            "final_dist": 1.5851935148239136
         },
         {
             "episode": 77,
             "outcome": "SUCCESS",
             "steps": 2,
             "collisions": 0,
-            "final_dist": 0.2889168858528137
+            "final_dist": 0.4971792995929718
         },
         {
             "episode": 78,
-            "outcome": "SUCCESS",
-            "steps": 4,
-            "collisions": 0,
-            "final_dist": 0.24725371599197388
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 3.956538200378418
         },
         {
             "episode": 79,
-            "outcome": "COLLISION",
-            "steps": 3,
-            "collisions": 1,
-            "final_dist": 4.522057056427002
+            "outcome": "SUCCESS",
+            "steps": 7,
+            "collisions": 0,
+            "final_dist": 0.5146403312683105
         },
         {
             "episode": 80,
-            "outcome": "COLLISION",
-            "steps": 2,
-            "collisions": 1,
-            "final_dist": 4.132938385009766
+            "outcome": "SUCCESS",
+            "steps": 7,
+            "collisions": 0,
+            "final_dist": 0.241890087723732
         },
         {
             "episode": 81,
             "outcome": "SUCCESS",
-            "steps": 6,
+            "steps": 7,
             "collisions": 0,
-            "final_dist": 0.19067126512527466
+            "final_dist": 0.22493115067481995
         },
         {
             "episode": 82,
             "outcome": "COLLISION",
-            "steps": 4,
+            "steps": 1,
             "collisions": 1,
-            "final_dist": 2.0034213066101074
+            "final_dist": 4.7037835121154785
         },
         {
             "episode": 83,
             "outcome": "COLLISION",
-            "steps": 2,
+            "steps": 4,
             "collisions": 1,
-            "final_dist": 5.015066146850586
+            "final_dist": 3.2494957447052
         },
         {
             "episode": 84,
@@ -600,56 +600,56 @@
             "outcome": "SUCCESS",
             "steps": 3,
             "collisions": 0,
-            "final_dist": 0.450581818819046
+            "final_dist": 0.2986246347427368
         },
         {
             "episode": 86,
             "outcome": "SUCCESS",
             "steps": 4,
             "collisions": 0,
-            "final_dist": 0.51237952709198
+            "final_dist": 0.5421914458274841
         },
         {
             "episode": 87,
             "outcome": "COLLISION",
-            "steps": 1,
+            "steps": 3,
             "collisions": 1,
-            "final_dist": 4.191648006439209
+            "final_dist": 3.8558602333068848
         },
         {
             "episode": 88,
             "outcome": "SUCCESS",
-            "steps": 6,
+            "steps": 5,
             "collisions": 0,
-            "final_dist": 0.3121564984321594
+            "final_dist": 0.12921905517578125
         },
         {
             "episode": 89,
             "outcome": "SUCCESS",
             "steps": 6,
             "collisions": 0,
-            "final_dist": 0.5248342752456665
+            "final_dist": 0.14631882309913635
         },
         {
             "episode": 90,
-            "outcome": "COLLISION",
-            "steps": 7,
-            "collisions": 1,
-            "final_dist": 2.3111748695373535
+            "outcome": "SUCCESS",
+            "steps": 8,
+            "collisions": 0,
+            "final_dist": 0.36662018299102783
         },
         {
             "episode": 91,
-            "outcome": "SUCCESS",
-            "steps": 3,
-            "collisions": 0,
-            "final_dist": 0.5724132657051086
+            "outcome": "COLLISION",
+            "steps": 2,
+            "collisions": 1,
+            "final_dist": 1.9428211450576782
         },
         {
             "episode": 92,
             "outcome": "COLLISION",
-            "steps": 6,
+            "steps": 1,
             "collisions": 1,
-            "final_dist": 1.4543616771697998
+            "final_dist": 6.3569183349609375
         },
         {
             "episode": 93,
@@ -661,737 +661,737 @@
         {
             "episode": 94,
             "outcome": "COLLISION",
-            "steps": 4,
+            "steps": 5,
             "collisions": 1,
-            "final_dist": 1.2070538997650146
+            "final_dist": 0.60941082239151
         },
         {
             "episode": 95,
             "outcome": "COLLISION",
             "steps": 1,
             "collisions": 1,
-            "final_dist": 3.0334911346435547
+            "final_dist": 2.7992587089538574
         },
         {
             "episode": 96,
             "outcome": "SUCCESS",
             "steps": 5,
             "collisions": 0,
-            "final_dist": 0.28612053394317627
+            "final_dist": 0.3481687307357788
         },
         {
             "episode": 97,
             "outcome": "SUCCESS",
             "steps": 8,
             "collisions": 0,
-            "final_dist": 0.4372289478778839
+            "final_dist": 0.4540521204471588
         },
         {
             "episode": 98,
             "outcome": "COLLISION",
-            "steps": 5,
+            "steps": 3,
             "collisions": 1,
-            "final_dist": 1.078400731086731
+            "final_dist": 2.727353811264038
         },
         {
             "episode": 99,
             "outcome": "COLLISION",
-            "steps": 2,
+            "steps": 4,
             "collisions": 1,
-            "final_dist": 6.017090320587158
+            "final_dist": 4.694378852844238
         },
         {
             "episode": 100,
             "outcome": "SUCCESS",
-            "steps": 3,
+            "steps": 4,
             "collisions": 0,
-            "final_dist": 0.5976492166519165
+            "final_dist": 0.5782452821731567
         },
         {
             "episode": 101,
-            "outcome": "COLLISION",
-            "steps": 3,
-            "collisions": 1,
-            "final_dist": 4.180882453918457
+            "outcome": "SUCCESS",
+            "steps": 10,
+            "collisions": 0,
+            "final_dist": 0.39230772852897644
         },
         {
             "episode": 102,
-            "outcome": "COLLISION",
-            "steps": 2,
-            "collisions": 1,
-            "final_dist": 5.442679405212402
+            "outcome": "SUCCESS",
+            "steps": 9,
+            "collisions": 0,
+            "final_dist": 0.5039574503898621
         },
         {
             "episode": 103,
             "outcome": "COLLISION",
             "steps": 4,
             "collisions": 1,
-            "final_dist": 0.6420568227767944
+            "final_dist": 0.8792078495025635
         },
         {
             "episode": 104,
             "outcome": "SUCCESS",
-            "steps": 6,
+            "steps": 5,
             "collisions": 0,
-            "final_dist": 0.39741265773773193
+            "final_dist": 0.2962872087955475
         },
         {
             "episode": 105,
-            "outcome": "COLLISION",
-            "steps": 3,
-            "collisions": 1,
-            "final_dist": 0.6395506858825684
+            "outcome": "SUCCESS",
+            "steps": 4,
+            "collisions": 0,
+            "final_dist": 0.43948742747306824
         },
         {
             "episode": 106,
             "outcome": "COLLISION",
             "steps": 2,
             "collisions": 1,
-            "final_dist": 5.60745096206665
+            "final_dist": 5.674874305725098
         },
         {
             "episode": 107,
             "outcome": "COLLISION",
-            "steps": 5,
+            "steps": 2,
             "collisions": 1,
-            "final_dist": 2.70009183883667
+            "final_dist": 6.372737884521484
         },
         {
             "episode": 108,
             "outcome": "SUCCESS",
-            "steps": 3,
+            "steps": 4,
             "collisions": 0,
-            "final_dist": 0.559045135974884
+            "final_dist": 0.15329401195049286
         },
         {
             "episode": 109,
             "outcome": "SUCCESS",
             "steps": 5,
             "collisions": 0,
-            "final_dist": 0.19948768615722656
+            "final_dist": 0.4295054078102112
         },
         {
             "episode": 110,
-            "outcome": "COLLISION",
-            "steps": 6,
-            "collisions": 1,
-            "final_dist": 2.0955002307891846
+            "outcome": "SUCCESS",
+            "steps": 8,
+            "collisions": 0,
+            "final_dist": 0.4050052762031555
         },
         {
             "episode": 111,
-            "outcome": "COLLISION",
-            "steps": 4,
-            "collisions": 1,
-            "final_dist": 3.892293691635132
+            "outcome": "SUCCESS",
+            "steps": 8,
+            "collisions": 0,
+            "final_dist": 0.3637278974056244
         },
         {
             "episode": 112,
             "outcome": "SUCCESS",
-            "steps": 11,
+            "steps": 10,
             "collisions": 0,
-            "final_dist": 0.31023961305618286
+            "final_dist": 0.4024386703968048
         },
         {
             "episode": 113,
             "outcome": "COLLISION",
             "steps": 3,
             "collisions": 1,
-            "final_dist": 4.395347595214844
+            "final_dist": 4.634695053100586
         },
         {
             "episode": 114,
             "outcome": "COLLISION",
-            "steps": 1,
+            "steps": 2,
             "collisions": 1,
-            "final_dist": 4.48016357421875
+            "final_dist": 3.6372158527374268
         },
         {
             "episode": 115,
             "outcome": "SUCCESS",
             "steps": 6,
             "collisions": 0,
-            "final_dist": 0.2746356725692749
+            "final_dist": 0.5057306289672852
         },
         {
             "episode": 116,
-            "outcome": "SUCCESS",
-            "steps": 9,
-            "collisions": 0,
-            "final_dist": 0.34487250447273254
+            "outcome": "COLLISION",
+            "steps": 6,
+            "collisions": 1,
+            "final_dist": 1.2162972688674927
         },
         {
             "episode": 117,
-            "outcome": "SUCCESS",
-            "steps": 9,
-            "collisions": 0,
-            "final_dist": 0.4752483367919922
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 5.928979396820068
         },
         {
             "episode": 118,
             "outcome": "SUCCESS",
-            "steps": 4,
+            "steps": 3,
             "collisions": 0,
-            "final_dist": 0.43668457865715027
+            "final_dist": 0.18486638367176056
         },
         {
             "episode": 119,
             "outcome": "SUCCESS",
-            "steps": 10,
+            "steps": 11,
             "collisions": 0,
-            "final_dist": 0.12270797044038773
+            "final_dist": 0.5208049416542053
         },
         {
             "episode": 120,
             "outcome": "COLLISION",
-            "steps": 1,
+            "steps": 4,
             "collisions": 1,
-            "final_dist": 4.39143705368042
+            "final_dist": 1.9254587888717651
         },
         {
             "episode": 121,
             "outcome": "SUCCESS",
-            "steps": 7,
+            "steps": 8,
             "collisions": 0,
-            "final_dist": 0.24593886733055115
+            "final_dist": 0.25507092475891113
         },
         {
             "episode": 122,
             "outcome": "SUCCESS",
-            "steps": 5,
+            "steps": 3,
             "collisions": 0,
-            "final_dist": 0.24742430448532104
+            "final_dist": 0.5973145365715027
         },
         {
             "episode": 123,
-            "outcome": "SUCCESS",
+            "outcome": "COLLISION",
             "steps": 3,
-            "collisions": 0,
-            "final_dist": 0.5692065358161926
+            "collisions": 1,
+            "final_dist": 0.6534721255302429
         },
         {
             "episode": 124,
             "outcome": "SUCCESS",
             "steps": 2,
             "collisions": 0,
-            "final_dist": 0.3560662865638733
+            "final_dist": 0.12137939035892487
         },
         {
             "episode": 125,
             "outcome": "SUCCESS",
             "steps": 5,
             "collisions": 0,
-            "final_dist": 0.5557505488395691
+            "final_dist": 0.27095285058021545
         },
         {
             "episode": 126,
             "outcome": "COLLISION",
             "steps": 4,
             "collisions": 1,
-            "final_dist": 0.9326951503753662
+            "final_dist": 0.8761044144630432
         },
         {
             "episode": 127,
             "outcome": "COLLISION",
             "steps": 2,
             "collisions": 1,
-            "final_dist": 7.536530494689941
+            "final_dist": 7.408010005950928
         },
         {
             "episode": 128,
             "outcome": "COLLISION",
-            "steps": 1,
+            "steps": 5,
             "collisions": 1,
-            "final_dist": 2.610896110534668
+            "final_dist": 1.5515178442001343
         },
         {
             "episode": 129,
             "outcome": "SUCCESS",
-            "steps": 3,
+            "steps": 2,
             "collisions": 0,
-            "final_dist": 0.4541575014591217
+            "final_dist": 0.019608115777373314
         },
         {
             "episode": 130,
             "outcome": "SUCCESS",
-            "steps": 6,
+            "steps": 5,
             "collisions": 0,
-            "final_dist": 0.23926442861557007
+            "final_dist": 0.39368894696235657
         },
         {
             "episode": 131,
             "outcome": "SUCCESS",
             "steps": 3,
             "collisions": 0,
-            "final_dist": 0.5289207696914673
+            "final_dist": 0.2246858924627304
         },
         {
             "episode": 132,
             "outcome": "SUCCESS",
             "steps": 4,
             "collisions": 0,
-            "final_dist": 0.02453307993710041
+            "final_dist": 0.40247008204460144
         },
         {
             "episode": 133,
             "outcome": "COLLISION",
             "steps": 5,
             "collisions": 1,
-            "final_dist": 1.651423454284668
+            "final_dist": 1.7166714668273926
         },
         {
             "episode": 134,
             "outcome": "SUCCESS",
             "steps": 4,
             "collisions": 0,
-            "final_dist": 0.22871065139770508
+            "final_dist": 0.07157277315855026
         },
         {
             "episode": 135,
-            "outcome": "SUCCESS",
-            "steps": 5,
-            "collisions": 0,
-            "final_dist": 0.31908470392227173
+            "outcome": "COLLISION",
+            "steps": 2,
+            "collisions": 1,
+            "final_dist": 2.5216064453125
         },
         {
             "episode": 136,
             "outcome": "SUCCESS",
             "steps": 3,
             "collisions": 0,
-            "final_dist": 0.27038946747779846
+            "final_dist": 0.3228442370891571
         },
         {
             "episode": 137,
             "outcome": "SUCCESS",
             "steps": 4,
             "collisions": 0,
-            "final_dist": 0.08438508212566376
+            "final_dist": 0.27851489186286926
         },
         {
             "episode": 138,
             "outcome": "SUCCESS",
             "steps": 4,
             "collisions": 0,
-            "final_dist": 0.44829827547073364
+            "final_dist": 0.1362149566411972
         },
         {
             "episode": 139,
             "outcome": "COLLISION",
-            "steps": 3,
+            "steps": 5,
             "collisions": 1,
-            "final_dist": 4.07933235168457
+            "final_dist": 1.06187903881073
         },
         {
             "episode": 140,
-            "outcome": "SUCCESS",
-            "steps": 14,
-            "collisions": 0,
-            "final_dist": 0.3657342791557312
+            "outcome": "COLLISION",
+            "steps": 12,
+            "collisions": 1,
+            "final_dist": 3.9904062747955322
         },
         {
             "episode": 141,
             "outcome": "SUCCESS",
             "steps": 3,
             "collisions": 0,
-            "final_dist": 0.016537953168153763
+            "final_dist": 0.10531151294708252
         },
         {
             "episode": 142,
-            "outcome": "SUCCESS",
-            "steps": 10,
-            "collisions": 0,
-            "final_dist": 0.28119099140167236
+            "outcome": "COLLISION",
+            "steps": 1,
+            "collisions": 1,
+            "final_dist": 8.678506851196289
         },
         {
             "episode": 143,
             "outcome": "COLLISION",
-            "steps": 5,
+            "steps": 9,
             "collisions": 1,
-            "final_dist": 5.745092868804932
+            "final_dist": 1.5861479043960571
         },
         {
             "episode": 144,
-            "outcome": "SUCCESS",
-            "steps": 8,
-            "collisions": 0,
-            "final_dist": 0.44477593898773193
-        },
-        {
-            "episode": 145,
             "outcome": "COLLISION",
             "steps": 4,
             "collisions": 1,
-            "final_dist": 0.8116230964660645
+            "final_dist": 4.9994425773620605
+        },
+        {
+            "episode": 145,
+            "outcome": "SUCCESS",
+            "steps": 4,
+            "collisions": 0,
+            "final_dist": 0.3842173218727112
         },
         {
             "episode": 146,
-            "outcome": "COLLISION",
-            "steps": 5,
-            "collisions": 1,
-            "final_dist": 4.532572269439697
+            "outcome": "SUCCESS",
+            "steps": 9,
+            "collisions": 0,
+            "final_dist": 0.5957208871841431
         },
         {
             "episode": 147,
             "outcome": "SUCCESS",
-            "steps": 7,
+            "steps": 6,
             "collisions": 0,
-            "final_dist": 0.19086883962154388
+            "final_dist": 0.24290156364440918
         },
         {
             "episode": 148,
             "outcome": "SUCCESS",
-            "steps": 6,
+            "steps": 5,
             "collisions": 0,
-            "final_dist": 0.34609538316726685
+            "final_dist": 0.15757891535758972
         },
         {
             "episode": 149,
             "outcome": "SUCCESS",
             "steps": 5,
             "collisions": 0,
-            "final_dist": 0.4771847724914551
+            "final_dist": 0.46154895424842834
         },
         {
             "episode": 150,
             "outcome": "SUCCESS",
             "steps": 7,
             "collisions": 0,
-            "final_dist": 0.19621959328651428
+            "final_dist": 0.2691827118396759
         },
         {
             "episode": 151,
             "outcome": "COLLISION",
-            "steps": 7,
+            "steps": 10,
             "collisions": 1,
-            "final_dist": 6.614269733428955
+            "final_dist": 3.7943530082702637
         },
         {
             "episode": 152,
             "outcome": "COLLISION",
-            "steps": 7,
+            "steps": 6,
             "collisions": 1,
-            "final_dist": 2.640263557434082
+            "final_dist": 3.023585081100464
         },
         {
             "episode": 153,
-            "outcome": "COLLISION",
-            "steps": 6,
-            "collisions": 1,
-            "final_dist": 3.892094612121582
+            "outcome": "SUCCESS",
+            "steps": 8,
+            "collisions": 0,
+            "final_dist": 0.42113175988197327
         },
         {
             "episode": 154,
             "outcome": "COLLISION",
-            "steps": 5,
+            "steps": 8,
             "collisions": 1,
-            "final_dist": 2.8105385303497314
+            "final_dist": 1.2306711673736572
         },
         {
             "episode": 155,
-            "outcome": "COLLISION",
-            "steps": 2,
-            "collisions": 1,
-            "final_dist": 4.2546892166137695
+            "outcome": "SUCCESS",
+            "steps": 6,
+            "collisions": 0,
+            "final_dist": 0.5400808453559875
         },
         {
             "episode": 156,
             "outcome": "COLLISION",
-            "steps": 9,
+            "steps": 5,
             "collisions": 1,
-            "final_dist": 0.7536804676055908
+            "final_dist": 3.5441486835479736
         },
         {
             "episode": 157,
             "outcome": "SUCCESS",
             "steps": 3,
             "collisions": 0,
-            "final_dist": 0.16578206419944763
+            "final_dist": 0.2530497610569
         },
         {
             "episode": 158,
             "outcome": "COLLISION",
-            "steps": 6,
+            "steps": 5,
             "collisions": 1,
-            "final_dist": 2.541879892349243
+            "final_dist": 5.306878566741943
         },
         {
             "episode": 159,
             "outcome": "COLLISION",
-            "steps": 2,
+            "steps": 4,
             "collisions": 1,
-            "final_dist": 2.466076135635376
+            "final_dist": 1.604360580444336
         },
         {
             "episode": 160,
             "outcome": "SUCCESS",
             "steps": 6,
             "collisions": 0,
-            "final_dist": 0.5641295313835144
+            "final_dist": 0.2865484058856964
         },
         {
             "episode": 161,
             "outcome": "SUCCESS",
-            "steps": 4,
+            "steps": 5,
             "collisions": 0,
-            "final_dist": 0.0882442370057106
+            "final_dist": 0.3230948746204376
         },
         {
             "episode": 162,
             "outcome": "SUCCESS",
             "steps": 5,
             "collisions": 0,
-            "final_dist": 0.43950048089027405
+            "final_dist": 0.2979357838630676
         },
         {
             "episode": 163,
             "outcome": "SUCCESS",
-            "steps": 9,
+            "steps": 8,
             "collisions": 0,
-            "final_dist": 0.5182598233222961
+            "final_dist": 0.450027734041214
         },
         {
             "episode": 164,
             "outcome": "SUCCESS",
-            "steps": 6,
+            "steps": 5,
             "collisions": 0,
-            "final_dist": 0.5209922790527344
+            "final_dist": 0.14350324869155884
         },
         {
             "episode": 165,
-            "outcome": "COLLISION",
-            "steps": 4,
-            "collisions": 1,
-            "final_dist": 4.370671272277832
+            "outcome": "SUCCESS",
+            "steps": 11,
+            "collisions": 0,
+            "final_dist": 0.4355318546295166
         },
         {
             "episode": 166,
             "outcome": "COLLISION",
-            "steps": 4,
+            "steps": 1,
             "collisions": 1,
-            "final_dist": 9.280400276184082
+            "final_dist": 9.367941856384277
         },
         {
             "episode": 167,
             "outcome": "COLLISION",
             "steps": 4,
             "collisions": 1,
-            "final_dist": 4.053906440734863
+            "final_dist": 3.8292124271392822
         },
         {
             "episode": 168,
             "outcome": "COLLISION",
             "steps": 1,
             "collisions": 1,
-            "final_dist": 6.751767635345459
+            "final_dist": 6.404587268829346
         },
         {
             "episode": 169,
             "outcome": "COLLISION",
-            "steps": 3,
+            "steps": 6,
             "collisions": 1,
-            "final_dist": 2.997236490249634
+            "final_dist": 2.898103952407837
         },
         {
             "episode": 170,
             "outcome": "COLLISION",
             "steps": 3,
             "collisions": 1,
-            "final_dist": 0.888701856136322
+            "final_dist": 0.755499005317688
         },
         {
             "episode": 171,
             "outcome": "COLLISION",
-            "steps": 12,
+            "steps": 3,
             "collisions": 1,
-            "final_dist": 1.8678120374679565
+            "final_dist": 8.168429374694824
         },
         {
             "episode": 172,
             "outcome": "SUCCESS",
             "steps": 2,
             "collisions": 0,
-            "final_dist": 0.3890494406223297
+            "final_dist": 0.4804551601409912
         },
         {
             "episode": 173,
             "outcome": "SUCCESS",
-            "steps": 11,
+            "steps": 8,
             "collisions": 0,
-            "final_dist": 0.22566881775856018
+            "final_dist": 0.289087176322937
         },
         {
             "episode": 174,
             "outcome": "COLLISION",
             "steps": 3,
             "collisions": 1,
-            "final_dist": 6.660494804382324
+            "final_dist": 6.70766019821167
         },
         {
             "episode": 175,
             "outcome": "COLLISION",
             "steps": 1,
             "collisions": 1,
-            "final_dist": 2.7006607055664062
+            "final_dist": 2.710383176803589
         },
         {
             "episode": 176,
             "outcome": "COLLISION",
-            "steps": 2,
+            "steps": 5,
             "collisions": 1,
-            "final_dist": 4.497345447540283
+            "final_dist": 1.5918272733688354
         },
         {
             "episode": 177,
             "outcome": "COLLISION",
-            "steps": 2,
+            "steps": 3,
             "collisions": 1,
-            "final_dist": 6.237488269805908
+            "final_dist": 5.37885046005249
         },
         {
             "episode": 178,
             "outcome": "SUCCESS",
             "steps": 2,
             "collisions": 0,
-            "final_dist": 0.23260900378227234
+            "final_dist": 0.23138247430324554
         },
         {
             "episode": 179,
             "outcome": "SUCCESS",
             "steps": 6,
             "collisions": 0,
-            "final_dist": 0.2574642300605774
+            "final_dist": 0.5872907042503357
         },
         {
             "episode": 180,
             "outcome": "SUCCESS",
             "steps": 7,
             "collisions": 0,
-            "final_dist": 0.539761483669281
+            "final_dist": 0.20533187687397003
         },
         {
             "episode": 181,
             "outcome": "SUCCESS",
             "steps": 4,
             "collisions": 0,
-            "final_dist": 0.18447671830654144
+            "final_dist": 0.24733687937259674
         },
         {
             "episode": 182,
             "outcome": "SUCCESS",
             "steps": 3,
             "collisions": 0,
-            "final_dist": 0.5649204254150391
+            "final_dist": 0.5478000044822693
         },
         {
             "episode": 183,
             "outcome": "COLLISION",
-            "steps": 4,
+            "steps": 2,
             "collisions": 1,
-            "final_dist": 2.1226041316986084
+            "final_dist": 5.539141654968262
         },
         {
             "episode": 184,
             "outcome": "COLLISION",
-            "steps": 5,
+            "steps": 2,
             "collisions": 1,
-            "final_dist": 2.46061110496521
+            "final_dist": 5.9647111892700195
         },
         {
             "episode": 185,
             "outcome": "SUCCESS",
-            "steps": 4,
+            "steps": 3,
             "collisions": 0,
-            "final_dist": 0.4459969699382782
+            "final_dist": 0.48643729090690613
         },
         {
             "episode": 186,
             "outcome": "SUCCESS",
             "steps": 4,
             "collisions": 0,
-            "final_dist": 0.362080842256546
+            "final_dist": 0.42410266399383545
         },
         {
             "episode": 187,
             "outcome": "SUCCESS",
             "steps": 6,
             "collisions": 0,
-            "final_dist": 0.23100285232067108
+            "final_dist": 0.19232751429080963
         },
         {
             "episode": 188,
             "outcome": "SUCCESS",
             "steps": 2,
             "collisions": 0,
-            "final_dist": 0.43765658140182495
+            "final_dist": 0.42433255910873413
         },
         {
             "episode": 189,
-            "outcome": "COLLISION",
-            "steps": 2,
-            "collisions": 1,
-            "final_dist": 2.5731186866760254
+            "outcome": "SUCCESS",
+            "steps": 4,
+            "collisions": 0,
+            "final_dist": 0.28430238366127014
         },
         {
             "episode": 190,
             "outcome": "SUCCESS",
             "steps": 2,
             "collisions": 0,
-            "final_dist": 0.2959458529949188
+            "final_dist": 0.4674820899963379
         },
         {
             "episode": 191,
             "outcome": "COLLISION",
-            "steps": 3,
+            "steps": 7,
             "collisions": 1,
-            "final_dist": 5.7409868240356445
+            "final_dist": 1.8428150415420532
         },
         {
             "episode": 192,
             "outcome": "COLLISION",
             "steps": 2,
             "collisions": 1,
-            "final_dist": 7.4983744621276855
+            "final_dist": 7.639869213104248
         },
         {
             "episode": 193,
             "outcome": "COLLISION",
-            "steps": 5,
+            "steps": 2,
             "collisions": 1,
-            "final_dist": 1.6700139045715332
+            "final_dist": 5.309334754943848
         },
         {
             "episode": 194,
-            "outcome": "COLLISION",
+            "outcome": "SUCCESS",
             "steps": 2,
-            "collisions": 1,
-            "final_dist": 0.9727152585983276
+            "collisions": 0,
+            "final_dist": 0.5013739466667175
         },
         {
             "episode": 195,
             "outcome": "COLLISION",
-            "steps": 6,
+            "steps": 5,
             "collisions": 1,
-            "final_dist": 0.7043591737747192
+            "final_dist": 1.4212253093719482
         },
         {
             "episode": 196,
             "outcome": "COLLISION",
             "steps": 2,
             "collisions": 1,
-            "final_dist": 2.5363306999206543
+            "final_dist": 2.2758543491363525
         },
         {
             "episode": 197,
-            "outcome": "COLLISION",
-            "steps": 10,
-            "collisions": 1,
-            "final_dist": 1.0153781175613403
+            "outcome": "SUCCESS",
+            "steps": 11,
+            "collisions": 0,
+            "final_dist": 0.18430134654045105
         },
         {
             "episode": 198,
             "outcome": "COLLISION",
             "steps": 3,
             "collisions": 1,
-            "final_dist": 3.719395637512207
+            "final_dist": 3.720935583114624
         },
         {
             "episode": 199,
@@ -1402,10 +1402,10 @@
         },
         {
             "episode": 200,
-            "outcome": "COLLISION",
-            "steps": 5,
-            "collisions": 1,
-            "final_dist": 1.2066032886505127
+            "outcome": "SUCCESS",
+            "steps": 6,
+            "collisions": 0,
+            "final_dist": 0.2290755659341812
         }
     ]
 }
