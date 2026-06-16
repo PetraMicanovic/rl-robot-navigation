@@ -12,6 +12,8 @@ import os
 import json
 import shutil
 import numpy as np
+import random 
+import torch
 
 from robot_env.env_factory import create_parallel_envs, create_eval_env
 from training.agent import build_ppo_agent
@@ -70,6 +72,11 @@ def train(n_dynamic_obstacles = None, obstacle_speed = None, pretrained_model_pa
         If False, only goal, collision and step penalty rewards are used.
     """
     config = load_config(CONFIG_PATH)
+
+    seed = config.get("seed", 42)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
 
     # Apply overrides or use config defaults
     if n_dynamic_obstacles is None:
@@ -177,6 +184,12 @@ def train_curriculum(stages=None, use_reward_shaping=True):
         stages = DEFAULT_CURRICULUM_STAGES
 
     config = load_config(CONFIG_PATH)
+    
+    seed = config.get("seed", 42)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+
     curriculum_config = config.get("curriculum", {})
     curriculum_ent_coef = curriculum_config.get("ent_coef", config["training"]["ent_coef"])
     curriculum_n_eval = curriculum_config.get("n_eval_episodes", config["evaluation"]["n_eval_episodes"])

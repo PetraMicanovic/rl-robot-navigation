@@ -28,6 +28,7 @@ def build_ppo_agent(config, training_env, log_dir):
     agent = PPO(
         policy=training_config["policy"],
         env=training_env,
+        seed=config["seed"],
         learning_rate=training_config["learning_rate"],
         n_steps=training_config["n_steps"],
         batch_size=training_config["batch_size"],
