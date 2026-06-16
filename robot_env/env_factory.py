@@ -74,6 +74,8 @@ def create_parallel_envs(config, config_path, n_dynamic_obstacles, obstacle_spee
     VecMonitor
         Vectorized and monitored parallel environment.
     """
+    base_seed = config.get("seed", 0) 
+
     number_of_envs = config["training"]["n_envs"]
     log_dir = config["paths"]["log_dir"]
     os.makedirs(log_dir, exist_ok=True)
@@ -81,7 +83,7 @@ def create_parallel_envs(config, config_path, n_dynamic_obstacles, obstacle_spee
     env_factory_list = []
     for i in range(number_of_envs):
         env_factory_list.append(make_env(config_path = config_path, n_dynamic_obstacles = n_dynamic_obstacles, obstacle_speed = obstacle_speed,
-                                        obstacle_speed_range = obstacle_speed_range, rank=i, use_reward_shaping = use_reward_shaping))
+                                        obstacle_speed_range = obstacle_speed_range, rank=i, use_reward_shaping = use_reward_shaping, seed=base_seed))
 
     parallel_env = SubprocVecEnv(env_factory_list)
     monitored_env = VecMonitor(parallel_env, filename=os.path.join(log_dir, "monitor"), info_keywords=("is_success",),)
