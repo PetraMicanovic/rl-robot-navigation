@@ -66,17 +66,41 @@ def _load_eval_npz(log_key):
         Returns None if the file does not exist.
     """
     path = os.path.join(LOGS_DIR, log_key, "evaluations.npz")
-    if not os.path.exists(path):
+    if os.path.exists(path):
+        data = np.load(path)
+        timesteps = data["timesteps"]
+        mean_rewards = data["results"].mean(axis=1)
+        if "ep_lengths" in data:
+            mean_lengths = data["ep_lengths"].mean(axis=1) 
+        else:
+            mean_lengths = None
+        return timesteps, mean_rewards, mean_lengths
+
+    # Fall back to attempt-suffixed folders, sorted by attempt number.
+    pattern = os.path.join(LOGS_DIR, f"{log_key}_attempt*", "evaluations.npz")
+    candidates = sorted(glob.glob(pattern))
+    if not candidates:
         return None
-    data = np.load(path)
-    timesteps = data["timesteps"]
-    mean_rewards = data["results"].mean(axis=1)
-    if "ep_lengths" in data:
-        mean_lengths = data["ep_lengths"].mean(axis=1) 
+
+    all_timesteps, all_rewards, all_lengths = [], [], []
+    have_lengths = True
+    for candidate_path in candidates:
+        data = np.load(candidate_path)
+        all_timesteps.append(data["timesteps"])
+        all_rewards.append(data["results"].mean(axis=1))
+        if "ep_lengths" in data:
+            all_lengths.append(data["ep_lengths"].mean(axis=1))
+        else:
+            have_lengths = False
+
+    timesteps = np.concatenate(all_timesteps)
+    mean_rewards = np.concatenate(all_rewards)
+    if have_lengths:
+        mean_lengths = np.concatenate(all_lengths)
     else:
         mean_lengths = None
-    return timesteps, mean_rewards, mean_lengths
 
+    return timesteps, mean_rewards, mean_lengths
 
 def _load_tb_scalar(log_path, tag):
     """
@@ -437,14 +461,14 @@ def plot_e4_training_curves():
     """
     # Each tuple: (legend label, TensorBoard log folder, named color, line style).
     series = [
-        ("With shaping", "models/ppo_robot_nav_obs6_spd1.0_shaping_meta.json",    "mediumpurple", "-"),
-        ("Without shaping", "models/ppo_robot_nav_obs6_spd1.0_no_shaping_meta.json", "coral",        "--"),
+        ("With shaping", "models/ppo_robot_nav_curriculum_stage5_obs10_spd1.0_shaping_meta.json",    "mediumpurple", "-"),
+        ("Without shaping", "models/ppo_robot_nav_curriculum_stage5_obs10_spd1.0_no_shaping_meta.json", "coral",        "--"),
     ]
 
     fig, ax = plt.subplots(figsize=(9, 4.5))
     ax.set_title("E4 — training reward curves (rollout)", pad=10)
 
-    plotted = False
+    plotted = False 
     for label, meta_path, color, ls in series:
         full_meta = os.path.join(os.path.dirname(__file__), "..", meta_path)
         if not os.path.exists(full_meta):
