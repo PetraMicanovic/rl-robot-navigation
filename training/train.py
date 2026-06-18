@@ -16,7 +16,7 @@ import random
 import torch
 
 from robot_env.env_factory import create_parallel_envs, create_eval_env
-from training.agent import build_ppo_agent
+from training.agent import build_ppo_agent,linear_schedule
 from training.callbacks import build_callbacks
 from stable_baselines3 import PPO
 
@@ -118,7 +118,7 @@ def train(n_dynamic_obstacles = None, obstacle_speed = None, pretrained_model_pa
             pretrained_model_path,
             env=training_env,
             tensorboard_log=log_dir,
-            custom_objects={"ent_coef": config["training"]["ent_coef"]},
+            custom_objects={"ent_coef": config["training"]["ent_coef"],"learning_rate": linear_schedule(config["training"]["learning_rate"])},
         )
     # Pass n_eval_episodes explicitly so train() always uses the value from config["evaluation"] and is never affected by curriculum 
     # overrides.
@@ -254,7 +254,7 @@ def train_curriculum(stages=None, use_reward_shaping=True):
                 pretrained_path,
                 env=training_env,
                 tensorboard_log=log_dir,
-                custom_objects={"ent_coef": curriculum_ent_coef}
+                custom_objects={"ent_coef": curriculum_ent_coef,"learning_rate": linear_schedule(config["training"]["learning_rate"])}
             )
         stage_suffix = f"curriculum_stage{stage_index + 1}_obs{n_obstacles}_spd{speed or speed_range}_{shaping_tag}"
         # Canonical best-model directory for this stage (shared across retries so EvalCallback always updates the same "global best"
@@ -275,7 +275,7 @@ def train_curriculum(stages=None, use_reward_shaping=True):
                         env=training_env,
                         tensorboard_log=log_dir,
                         # Use local curriculum_ent_coef, not the unmodified config value
-                        custom_objects={"ent_coef": curriculum_ent_coef},
+                        custom_objects={"ent_coef": curriculum_ent_coef,"learning_rate": linear_schedule(config["training"]["learning_rate"])},
                     )
                 else:
                     print("No best model found — continuing from end-of-previous-attempt weights.")
