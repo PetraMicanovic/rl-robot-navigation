@@ -41,3 +41,19 @@ def build_ppo_agent(config, training_env, log_dir):
     )
 
     return agent
+
+def linear_schedule(initial_value):
+    """
+    Linear learning rate schedule. 
+    
+    Parameters:
+    initial_value: float
+        Initial learning rate at the beginning of training.
+    
+    Returns
+    callable
+        Function that computes the current learning rate based on remaining training progress (1.0 = start, 0.0 = end).
+    """
+    def schedule(progress_remaining):
+        return progress_remaining * initial_value
+    return schedule
