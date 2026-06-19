@@ -102,6 +102,46 @@ def _load_eval_npz(log_key):
 
     return timesteps, mean_rewards, mean_lengths
 
+def _load_eval_npz_prefix(log_prefix):
+    """
+    Load and concatenate EvalCallback npz files for a train_curriculum() runthat used log_prefix (e.g. "shaping" or "no_shaping").
+
+    train_curriculum() writes each stage/attempt to:
+        logs/eval_{log_prefix}_obs{N}_spd{spd}_attempt{A}/evaluations.npz
+
+    All matching files are sorted lexicographically (which is also chronological because stages advance in order) and concatenated 
+    into a single timeline.  Timesteps are adjusted so each stage continues from where the previous one left off — this is necessary 
+    because SB3's EvalCallback resets its local step counter when a new callback object is created at the start of each stage.
+
+    Parameters
+    log_prefix: str
+        Prefix used in train_curriculum(log_prefix=...).
+
+    Returns
+    tuple (timesteps, mean_rewards) — both np.ndarray — or None if no files found.
+    """
+    pattern = os.path.join(LOGS_DIR, f"eval_{log_prefix}_obs*", "evaluations.npz")
+    candidates = sorted(glob.glob(pattern))
+    if not candidates:
+        return None
+
+    all_timesteps, all_rewards = [], []
+    cumulative_offset = 0
+
+    for candidate_path in candidates:
+        data = np.load(candidate_path)
+        ts = data["timesteps"]
+        rewards = data["results"].mean(axis=1)
+        # Each stage's local timestep counter starts near 0; shift it so the curve is continuous across the full training run.
+        all_timesteps.append(ts + cumulative_offset)
+        all_rewards.append(rewards)
+        if len(ts) > 0:
+            cumulative_offset += int(ts[-1])  
+        else:
+             cumulative_offset += 0
+
+    return np.concatenate(all_timesteps), np.concatenate(all_rewards)
+
 def _load_tb_scalar(log_path, tag):
     """
     Load a scalar time series from a TensorBoard event file.
@@ -454,44 +494,38 @@ def plot_e2_training_curves():
 
 def plot_e4_training_curves():
     """
-    E4 — rollout/ep_rew_mean from TensorBoard for shaping vs no shaping.
+    E4 — EvalCallback reward curves for shaping vs no shaping.
 
-    The raw signal is noisy so a moving average (_smooth) is plotted on top.
-    Requires tensorboard to be installed; skips silently if not available.
+    Reads evaluations.npz files written by train_curriculum() when called with log_prefix="shaping" and log_prefix="no_shaping".  
+    The files live under logs/eval_shaping_obs*_attempt*/ and logs/eval_no_shaping_obs*_attempt*/ respectively, so the two 
+    curriculum runs never overwrite each other. Falls back gracefully if neither prefix has any npz files yet.
     """
-    # Each tuple: (legend label, TensorBoard log folder, named color, line style).
     series = [
-        ("With shaping", "models/ppo_robot_nav_curriculum_stage5_obs10_spd1.0_shaping_meta.json",    "mediumpurple", "-"),
-        ("Without shaping", "models/ppo_robot_nav_curriculum_stage5_obs10_spd1.0_no_shaping_meta.json", "coral",        "--"),
+        ("With shaping", "shaping", "mediumpurple", "-"),
+        ("Without shaping", "no_shaping", "coral", "--"),
+
     ]
 
     fig, ax = plt.subplots(figsize=(9, 4.5))
-    ax.set_title("E4 — training reward curves (rollout)", pad=10)
+    ax.set_title("E4 — training reward curves (EvalCallback)", pad=10)
 
     plotted = False 
-    for label, meta_path, color, ls in series:
-        full_meta = os.path.join(os.path.dirname(__file__), "..", meta_path)
-        if not os.path.exists(full_meta):
+    for label, prefix, color, ls in series:
+        result = _load_eval_npz_prefix(prefix)
+        if result is None:
             continue
-        with open(full_meta) as f:
-            folder = json.load(f)["tb_log_folder"]
-        steps, values = _load_tb_scalar(folder, "rollout/ep_rew_mean")
-        if steps is None:
-            continue
-        smoothed = _smooth(values, window=9)
-        # Raw signal at low opacity as background context.
-        ax.plot(steps / 1e6, values, color=color, linewidth=0.5, alpha=0.25)
-        # Smoothed signal as the main readable line.
-        ax.plot(steps / 1e6, smoothed, color=color, linestyle=ls, linewidth=2, label=label)
+
+        timesteps, mean_rewards = result
+        ax.plot(timesteps / 1e6, mean_rewards, color=color, linestyle=ls, linewidth=1.8, label=label, alpha=0.9)
         plotted = True
 
     if not plotted:
-        print("E4 TensorBoard logs not found or tensorboard not installed, skipping.")
+        print("E4 npz files not found, skipping training curves.")
         plt.close(fig)
         return
 
     ax.set_xlabel("Timesteps (M)")
-    ax.set_ylabel("Mean reward (rollout)")
+    ax.set_ylabel("Mean reward (20-episode eval)")
     ax.legend(fontsize=10)
     ax.set_ylim(-11, -2)
     fig.tight_layout()
