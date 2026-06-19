@@ -65,7 +65,7 @@ def run_e4(train_models = True):
 
         # Train no_shaping curriculum variant only if not already available
         if not os.path.exists(f"{CURRICULUM_MODEL_NO_SHAPING}.zip"):
-            train_curriculum(use_reward_shaping=False)
+            train_curriculum(use_reward_shaping=False, log_prefix="no_shaping")
         evaluate(
             model_path=CURRICULUM_MODEL_NO_SHAPING,
             n_dynamic_obstacles=6,
