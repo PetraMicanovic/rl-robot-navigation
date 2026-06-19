@@ -30,17 +30,17 @@ This adds a penalty to the reward for large changes in action between consecutiv
 
 Evaluated at fixed speed=1.0 across three obstacle counts.
 
-| Obstacles | Success | Collisions | Truncated | Avg steps | Avg col/ep | vs v3 |
+| Obstacles | Success | Collisions | Truncated | Avg steps | Avg col/ep | vs v4 |
 |---|---|---|---|---|---|---|
-| N=3 | 86.5% (173/200) | 13.5% | 0.0% | 5.5 | 0.135 | +27.0pp |
-| N=6 (training) | 71.5% (143/200) | 28.5% | 0.0% | 4.9 | 0.285 | +20.0pp |
-| N=10 | 62.0% (124/200) | 38.0% | 0.0% | 4.7 | 0.380 | +19.5pp |
+| N=3 | 86.5% (173/200) | 13.5% | 0.0% | 5.7 | 0.135 | +0.0pp |
+| N=6 (training) | 72.0% (144/200) | 28.0% | 0.0% | 5.0 | 0.280 | +0.5pp |
+| N=10 | 67.0% (134/200) | 33.0% | 0.0% | 5.1 | 0.330 | +5.0pp |
 
 ![E1 metrics](figures/e1_metrics.png)
 
-All three configurations improved by roughly 20–27pp over v3. N=3 reaches 86.5%, which is the best single result across all versions so far. The gains are fairly uniform across density levels, which suggests the smoothing is helping in a general way rather than being specific to any particular obstacle count.
+Results are largely in line with v4. N=3 is essentially identical (86.5% both times), which is reassuring. N=6 went from 71.5% to 72.0% — basically the same. The more notable change is N=10, which improved from 62.0% to 67.0% (+5.0pp). Whether this is a meaningful gain or just run-to-run variance is hard to say with 200 episodes; it would be worth re-evaluating with more episodes to see if it holds.
 
-Episode length stayed in the same range as v3 (~4–5 steps), so the agent isn't just taking slower, more cautious paths — it's still reaching the goal at roughly the same speed.
+Episode lengths are slightly longer at N=3 (5.7 vs 5.5 in v4), which could mean the agent is being a bit more cautious in low-density environments. Not a concern, just something to keep an eye on.
 
 ![E1 training curves](figures/e1_training_curves.png)
 
@@ -50,17 +50,17 @@ Episode length stayed in the same range as v3 (~4–5 steps), so the agent isn't
 
 Evaluated at fixed N=6 across three speeds.
 
-| Speed | Success | Collisions | Truncated | Avg steps | Avg col/ep | vs v3 |
+| Speed | Success | Collisions | Truncated | Avg steps | Avg col/ep | vs v4 |
 |---|---|---|---|---|---|---|
-| 0.5 (slower) | 77.5% (155/200) | 22.5% | 0.0% | 5.3 | 0.225 | +25.5pp |
-| 1.0 (training) | 71.5% (143/200) | 28.5% | 0.0% | 4.9 | 0.285 | +20.0pp |
-| 1.5 (faster) | 75.5% (151/200) | 24.5% | 0.0% | 5.2 | 0.245 | +24.5pp |
+| 0.5 (slower) | 80.5% (161/200) | 19.5% | 0.0% | 5.4 | 0.195 | +3.0pp |
+| 1.0 (training) | 72.0% (144/200) | 28.0% | 0.0% | 5.0 | 0.280 | +0.5pp |
+| 1.5 (faster) | 74.5% (149/200) | 25.5% | 0.0% | 5.2 | 0.255 | -1.0pp |
 
 ![E2 metrics](figures/e2_metrics.png)
 
-Performance is fairly consistent across speeds, which was already the case in v3. The improvement over v3 is large across the board, especially at speed=0.5 (+25.5pp) and speed=1.5 (+24.5pp).
+The pattern from v4 holds: performance is fairly consistent across speeds, and the agent doesn't seem to struggle notably more at speed=1.5 than at the training condition. The training speed (1.0) and fast speed (1.5) are within ~2pp of each other, which is consistent with what we saw before.
 
-One slightly unexpected result is that speed=1.5 (75.5%) outperforms speed=1.0 (71.5%), which is the training condition. This didn't happen in v3. The difference is small enough that it might just be noise, but it's worth keeping an eye on in future runs.
+Speed=0.5 gained +3.0pp over v4 and is now at 80.5%, which is the best result in this experiment. Speed=1.5 dropped by 1.0pp, which is negligible. The observation from v4 that speed=1.5 slightly outperforms the training speed is still present here, which makes it slightly less likely to be just noise — though the margin (74.5% vs 72.0%) is still small enough that we shouldn't read too much into it.
 
 ![E2 training curves](figures/e2_training_curves.png)
 
@@ -70,21 +70,23 @@ One slightly unexpected result is that speed=1.5 (75.5%) outperforms speed=1.0 (
 
 Evaluated on seven configurations not seen during training.
 
-| Obstacles | Speed | Success | Collisions | Truncated | Avg steps | Avg col/ep | vs v3 |
+| Obstacles | Speed | Success | Collisions | Truncated | Avg steps | Avg col/ep | vs v4 |
 |---|---|---|---|---|---|---|---|
-| 5 | 0.8 | 78.5% (157/200) | 21.5% | 0.0% | 5.2 | 0.215 | +19.0pp |
-| 7 | 1.0 | 68.5% (137/200) | 31.5% | 0.0% | 5.1 | 0.315 | +20.0pp |
-| 8 | 1.2 | 70.0% (140/200) | 30.0% | 0.0% | 4.9 | 0.300 | +23.0pp |
-| 9 | 1.3 | 64.5% (129/200) | 35.5% | 0.0% | 4.7 | 0.355 | +14.0pp |
-| 10 | 1.5 | 60.5% (121/200) | 39.5% | 0.0% | 4.7 | 0.395 | +21.5pp |
-| 12 | 2.0 | 56.5% (113/200) | 43.5% | 0.0% | 4.7 | 0.435 | +16.0pp |
-| 15 | 0.3 | 57.0% (114/200) | 43.0% | 0.0% | 4.5 | 0.430 | +18.5pp |
+| 5 | 0.8 | 81.5% (163/200) | 18.5% | 0.0% | 5.5 | 0.185 | +3.0pp |
+| 7 | 1.0 | 73.0% (146/200) | 27.0% | 0.0% | 5.0 | 0.270 | +4.5pp |
+| 8 | 1.2 | 66.0% (132/200) | 34.0% | 0.0% | 5.0 | 0.340 | -4.0pp |
+| 9 | 1.3 | 67.0% (134/200) | 33.0% | 0.0% | 4.9 | 0.330 | +2.5pp |
+| 10 | 1.5 | 63.5% (127/200) | 36.5% | 0.0% | 4.8 | 0.365 | +3.0pp |
+| 12 | 2.0 | 55.5% (111/200) | 44.5% | 0.0% | 4.4 | 0.445 | -1.0pp |
+| 15 | 0.3 | 60.5% (121/200) | 39.5% | 0.0% | 4.7 | 0.395 | +3.5pp |
 
 ![E3 metrics](figures/e3_metrics.png)
 
-Generalization improved across all seven configurations, with gains between +14.0pp and +23.0pp. N=15/speed=0.3, which was the hardest configuration in previous versions (6.5% in v2, 38.5% in v3), now reaches 57.0%. Similarly, N=12/speed=2.0 crossed 50% for the first time (56.5%).
+Most configurations are within a few pp of their v4 values, which is what we'd expect from a rerun. The clearest outlier is N=8/speed=1.2, which dropped by 4.0pp (from 70.0% to 66.0%). This is on the larger end of what you'd expect from noise with 200 episodes, so it's at least worth flagging, but not necessarily something to worry about yet.
 
-The smallest gain is N=9/speed=1.3 at +14.0pp. It's not obvious why this configuration improved less than the others — it falls in the middle of the density range and has a moderate speed, so there's no clear reason it should be harder. It still improved (50.5% → 64.5%), just less than expected.
+On the positive side, N=5/speed=0.8 (+3.0pp), N=7/speed=1.0 (+4.5pp), and N=15/speed=0.3 (+3.5pp) all improved slightly. The hard configurations (N≥10) remain in the 55–67% range, consistent with v4.
+
+N=12/speed=2.0 dropped marginally from 56.5% to 55.5%. It's still above 50%, which was already a milestone in v4.
 
 ---
 
@@ -92,16 +94,16 @@ The smallest gain is N=9/speed=1.3 at +14.0pp. It's not obvious why this configu
 
 Both variants trained with action smoothing enabled, evaluated at N=6, speed=1.0.
 
-| Variant | Success | Collisions | Truncated | Avg steps | Avg col/ep | vs v3 |
+| Variant | Success | Collisions | Truncated | Avg steps | Avg col/ep | vs v4 |
 |---|---|---|---|---|---|---|
-| With shaping | 71.5% (143/200) | 28.5% | 0.0% | 4.9 | 0.285 | +20.0pp |
-| Without shaping | 28.5% (57/200) | 71.5% | 0.0% | 6.2 | 0.715 | +22.5pp |
+| With shaping | 72.0% (144/200) | 28.0% | 0.0% | 5.0 | 0.280 | +0.5pp |
+| Without shaping | 29.5% (59/200) | 70.5% | 0.0% | 4.6 | 0.705 | +1.0pp |
 
 ![E4 metrics](figures/e4_metrics.png)
 
-The with-shaping variant improves by 20pp over v3, consistent with the other experiments. The more interesting result is the no-shaping variant: it goes from 6.0% in v3 to 28.5% here. In v3 (and v2 before it), training without shaping produced essentially random behavior. Here it actually learns something, which suggests the smoothing penalty is providing some useful training signal on its own.
+Both variants reproduced closely. The shaping variant is at 72.0% (vs 71.5% in v4) and the no-shaping variant at 29.5% (vs 28.5%). The gap between them is essentially the same as before (~42pp), which confirms that reward shaping is doing most of the heavy lifting and the smoothing penalty alone isn't sufficient.
 
-That said, 28.5% vs 71.5% is still a large gap, so the reward shaping is clearly doing most of the work. The two seem to work well together rather than one replacing the other.
+The no-shaping result being reproducibly around 29% (as opposed to the ~6% seen in v3) does strengthen the case that action smoothing is providing some meaningful training signal on its own. Whether that's because smoother trajectories are inherently easier to learn from, or because the penalty is acting as an implicit regularizer, is still an open question.
 
 ---
 
@@ -113,17 +115,17 @@ That said, 28.5% vs 71.5% is still a large gap, so the reward shaping is clearly
 
 ## Overall summary
 
-| Experiment | Best result | Configuration | vs v3 |
+| Experiment | Best result | Configuration | vs v4 |
 |---|---|---|---|
-| E1 | 86.5% | N=3, speed=1.0 | +27.0pp |
-| E2 | 77.5% | N=6, speed=0.5 | +25.5pp |
-| E3 | 78.5% | N=5, speed=0.8 | +19.0pp |
-| E4 | 71.5% | shaping, N=6, speed=1.0 | +20.0pp |
+| E1 | 86.5% | N=3, speed=1.0 | +0.0pp |
+| E2 | 80.5% | N=6, speed=0.5 | +3.0pp |
+| E3 | 81.5% | N=5, speed=0.8 | +3.0pp |
+| E4 | 72.0% | shaping, N=6, speed=1.0 | +0.5pp |
 
-v4 is the best version so far. Adding `action_smoothing_scale=0.16` gave consistent gains of around +20pp over v3 across all experiments, and collision rates dropped from the 40–60% range in v3 down to 15–45% depending on the configuration.
+Overall, the results reproduce well. The gains over v4 are small (0–5pp in most places), which is expected given that the configuration is unchanged — this was always meant to be a consistency check rather than an improvement.
 
-The E4 no-shaping result (6% → 28.5%) is worth investigating further — it's not clear whether this is a direct effect of the smoother actions making the task easier to learn, or whether the smoothing penalty is acting as an implicit regularizer that helps even in the absence of explicit reward shaping.
+The one configuration that went in the other direction (N=8/speed=1.2 in E3, -4.0pp) is worth monitoring but isn't alarming on its own. Run-to-run variance with 200 episodes can easily produce differences of this size.
 
-The main remaining issue is that harder configurations (N≥10 or high speed) still fail 35–45% of the time. Several other values of `action_smoothing_scale` were tested prior to this, but 0.16 gave the best results — both lower and higher values led to noticeably worse performance, so this appears to be close to optimal for the current setup.
+The next step would probably be to try a different value for `action_smoothing_scale`, or to look at whether some form of curriculum adjustment could help with the harder configurations where the agent is still failing 35–45% of the time.
 
 ---
