@@ -33,7 +33,7 @@ DEFAULT_CURRICULUM_STAGES = [
     # Stage 3: increase obstacle speed to standard level
     {"n_obstacles": 3, "speed": 1.0, "timesteps": 600_000, "threshold": 0.50, "max_retries": 1},
     # Stage 4: increase obstacle density while keeping standard speed
-    {"n_obstacles": 6, "speed": 1.0, "timesteps": 800_000, "threshold": 0.45, "max_retries": 1},
+    {"n_obstacles": 6, "speed": 1.0, "timesteps": 1_200_000, "threshold": 0.45, "max_retries": 1},
     # Stage 5: final density — no threshold, always runs to completion
     {"n_obstacles": 10, "speed": 1.0, "timesteps": 1_000_000, "threshold": None, "max_retries": 0},
 ]
@@ -147,7 +147,7 @@ def train(n_dynamic_obstacles = None, obstacle_speed = None, pretrained_model_pa
     training_env.close()
     eval_env.close()
 
-def train_curriculum(stages=None, use_reward_shaping=True):
+def train_curriculum(stages=None, use_reward_shaping=True, log_prefix=None):
     """
     Multi-stage curriculum training pipeline (v3).
 
@@ -175,6 +175,11 @@ def train_curriculum(stages=None, use_reward_shaping=True):
     use_reward_shaping: bool
         Passed through to each train() call. If True, includes progress reward and proximity penalty. Should be True for curriculum 
         training.
+    log_prefix: str or None
+        Optional prefix prepended to every EvalCallback log subfolder name. Use this to separate logs from parallel runs (e.g. "shaping" 
+        vs "no_shaping"), so each variant writes to its own evaluations.npz files and the two runs do not overwrite each other.
+        When None (default) the subfolder name is the standard "obs{N}_spd{spd}_attempt{A}". When set (e.g. "shaping"), the subfolder 
+        becomes "shaping_obs{N}_spd{spd}_attempt{A}".
 
     Returns
     str
@@ -281,7 +286,10 @@ def train_curriculum(stages=None, use_reward_shaping=True):
                     print("No best model found — continuing from end-of-previous-attempt weights.")
 
             # Rebuild callbacks with a per-attempt log path so that evaluations.npz is fresh and _read_success_rate() is accurate.
-            attempt_log_suffix = (f"obs{n_obstacles}_spd{eval_speed}_attempt{attempt}")
+            if log_prefix:
+                attempt_log_suffix = (f"{log_prefix}_obs{n_obstacles}_spd{eval_speed}_attempt{attempt}")
+            else:
+                attempt_log_suffix = (f"obs{n_obstacles}_spd{eval_speed}_attempt{attempt}")
             callbacks = build_callbacks(
                 config,
                 eval_env,
@@ -305,7 +313,7 @@ def train_curriculum(stages=None, use_reward_shaping=True):
                 break
 
             # Read success rate from the per-attempt evaluations.npz
-            rate = _read_success_rate(config, n_obstacles, eval_speed, attempt)
+            rate = _read_success_rate(config, n_obstacles, eval_speed, attempt, log_prefix=log_prefix)
             print(f"Eval success rate: {rate:.1%}  (threshold: {threshold:.0%})")
 
             if rate >= threshold:
@@ -354,7 +362,7 @@ def train_curriculum(stages=None, use_reward_shaping=True):
 
     return alias
 
-def _read_success_rate(config, n_obstacles, speed, attempt = 0):
+def _read_success_rate(config, n_obstacles, speed, attempt=0, log_prefix=None):
     """
     Read the most recent success rate from EvalCallback's evaluations.npz.
 
@@ -366,12 +374,17 @@ def _read_success_rate(config, n_obstacles, speed, attempt = 0):
     speed: float
     attempt : int
         Attempt index (0-based). Must match the suffix used in build_callbacks.
+    log_prefix: str or None
+        Must match the log_prefix passed to train_curriculum() for this run.
 
     Returns
     float
         Success rate in [0, 1], or 0.0 if the file does not exist yet.
     """
-    attempt_log_suffix = f"obs{n_obstacles}_spd{speed}_attempt{attempt}"
+    if log_prefix:
+        attempt_log_suffix = (f"{log_prefix}_obs{n_obstacles}_spd{speed}_attempt{attempt}")
+    else:
+        attempt_log_suffix = (f"obs{n_obstacles}_spd{speed}_attempt{attempt}")
 
     eval_log_path = os.path.join(
         config["paths"]["log_dir"],
