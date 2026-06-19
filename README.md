@@ -44,8 +44,10 @@ Total observation size: **34** (up from 12 in v1.0-baseline)
 +0.3·Δd      progress toward the target (reward shaping)
 −0.02        penalty per timestep (encourages efficiency)
 −f(d)        proximity penalty, active when closer than danger_zone_radius
+−0.16·‖Δa‖²  action smoothing penalty (penalizes large changes in action between consecutive steps)
 ```
-The proximity penalty `f(d)` scales smoothly from `0` at `danger_zone_radius` to `-proximity_penalty_scale` at contact distance. The idea is to discourage the agent from getting too close to obstacles even when it doesn't actually collide. Both shaping terms are only active when `use_reward_shaping=True`.
+The proximity penalty `f(d)` scales smoothly from `0` at `danger_zone_radius` to `-proximity_penalty_scale` at contact distance. The idea is to discourage the agent from getting too close to obstacles even when it doesn't actually collide. The action smoothing penalty discourages sudden, erratic movement by penalizing the squared difference between consecutive actions, encouraging the agent to follow smoother and more stable trajectories. Both reward-shaping terms (progress + proximity) are only active when `use_reward_shaping=True`. Action smoothing is controlled separately via `action_smoothing_scale` in `config.json`.
+
 
 ## Installation
 
@@ -96,7 +98,7 @@ Major upgrade to observation space and reward function.
 **Reward function** extended with a proximity penalty:
 - Smooth penalty that scales from `0` at `danger_zone_radius` down to `-proximity_penalty_scale` at contact distance — discourages the agent from lingering near obstacles even without colliding
 
-### v3.0-curriculum 
+### [v3.0-curriculum](https://github.com/PetraMicanovic/rl-robot-navigation/releases/tag/v3.0-curriculum) 
 
 Replaces the fixed two-phase training with a multi-stage curriculum that gradually increases difficulty.
 
@@ -117,5 +119,21 @@ Each stage starts from the best model saved in the previous stage, so the agent 
 - `train_curriculum()` — full curriculum pipeline, saves a canonical model alias at `models/ppo_robot_nav_curriculum_shaping.zip`
 
 Experiments E1–E4 are kept but now support two modes: evaluating the curriculum model directly (`train_models=False`) or running the original per-experiment training (`train_models=True`), controlled by `MODE` in `main.py`.
+
+---
+
+### v4.0-action-smoothing
+
+Adds an action smoothing penalty to the reward function on top of the v3.0 curriculum setup:
+
+```json
+"action_smoothing_scale": 0.16
+```
+
+This penalizes large changes in action between consecutive steps, discouraging erratic movement and encouraging smoother, more committed trajectories. Several values were tested; `0.16` gave the best results and is the one used for the curriculum model.
+
+The curriculum used for the v4 results extends the v3 stage progression to 10 stages (N=0 -> N=2 -> N=3 -> ... -> N=13), with obstacle speed sampled from a range starting at stage 4 instead of a fixed value.
+
+See [`results/RESULTS.md`](results/RESULTS.md) afor the full evaluation.
 
 ---
