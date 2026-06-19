@@ -2,8 +2,7 @@
 Entry point for robot navigation RL training and experiments.
 
 Set MODE to control what runs:
-
-  "curriculum"  — trains the curriculum model only (use this first).
+  "curriculum" — trains the curriculum model only (use this first).
   "experiments" — runs all four experiments using already-trained models.
   "all" — trains the curriculum model, then runs all experiments.
 
@@ -27,10 +26,9 @@ MODE = "all"
 if __name__ == "__main__":
 
     # Curriculum training 
-    # Trains the agent through progressively harder stages and saves the
-    # final model as models/ppo_robot_nav_curriculum_shaping.zip
+    # Trains the agent through progressively harder stages and saves the final model as models/ppo_robot_nav_curriculum_shaping.zip
     if MODE in ("curriculum", "all"):
-        train_curriculum(use_reward_shaping=True)
+        train_curriculum(use_reward_shaping=True, log_prefix="shaping")
 
     # Experiments 
     # train_models = True -> each experiment trains its own model from scratch
@@ -38,10 +36,10 @@ if __name__ == "__main__":
     if MODE in ("experiments", "all"):
         train_models = MODE == "experiments"
 
-        run_e1(train_models=train_models)  # varying obstacle count
-        run_e2(train_models=train_models)  # varying obstacle speed
-        run_e3(train_models=train_models)  # generalization to unseen configs
-        run_e4(train_models=train_models)  # reward shaping vs no shaping
+        run_e1(train_models=train_models) # varying obstacle count
+        run_e2(train_models=train_models) # varying obstacle speed
+        run_e3(train_models=train_models) #generalization to unseen configs
+        run_e4(train_models=train_models) # reward shaping vs no shaping
 
         # Generate plots and summary tables from saved results
         run_visualization()
