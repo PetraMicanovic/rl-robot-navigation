@@ -87,6 +87,8 @@ Initial working version of the environment and training pipeline.
 - Basic reward function: goal, collision, progress shaping, step penalty
 - Experiments E1–E4 covering obstacle density, speed, generalization, and reward shaping
 
+---
+
 ### [v2.0-obs-reward](https://github.com/PetraMicanovic/rl-robot-navigation/releases/tag/v2.0-obs-reward)
 
 Major upgrade to observation space and reward function.
@@ -96,11 +98,13 @@ Major upgrade to observation space and reward function.
 - Added velocities of the **3 nearest dynamic obstacles** `[vx1, vy1, vx2, vy2, vx3, vy3]` — gives the agent awareness of obstacle movement direction, not just proximity
 
 **Reward function** extended with a proximity penalty:
-- Smooth penalty that scales from `0` at `danger_zone_radius` down to `-proximity_penalty_scale` at contact distance — discourages the agent from lingering near obstacles even without colliding
+- Smooth penalty scaling from `0` at `danger_zone_radius` to `-proximity_penalty_scale` at contact distance
 
-### [v3.0-curriculum](https://github.com/PetraMicanovic/rl-robot-navigation/releases/tag/v3.0-curriculum) 
+---
 
-Replaces the fixed two-phase training with a multi-stage curriculum that gradually increases difficulty.
+### [v3.0-curriculum](https://github.com/PetraMicanovic/rl-robot-navigation/releases/tag/v3.0-curriculum)
+
+Replaces fixed two-phase training with a multi-stage curriculum that gradually increases difficulty.
 
 **Curriculum stages** (default):
 
@@ -112,28 +116,34 @@ Replaces the fixed two-phase training with a multi-stage curriculum that gradual
 | 4 | 6 | 1.0 | 800 000 | 45% |
 | 5 | 10 | 1.0 | 1 000 000 | — |
 
-Each stage starts from the best model saved in the previous stage, so the agent builds on what it already learned rather than starting from scratch. A threshold column shows the success rate the agent needs to reach before the curriculum considers the stage complete — if the threshold isn't met the agent still advances, but the log will note it.
+Each stage starts from the best model saved in the previous stage. The threshold shows the success rate the agent needs to reach before advancing — if not met, the agent still advances but the log will note it.
 
 **Training entry points** (`train.py`):
 - `train()` — single fixed-config run, same as v1/v2
 - `train_curriculum()` — full curriculum pipeline, saves a canonical model alias at `models/ppo_robot_nav_curriculum_shaping.zip`
 
-Experiments E1–E4 are kept but now support two modes: evaluating the curriculum model directly (`train_models=False`) or running the original per-experiment training (`train_models=True`), controlled by `MODE` in `main.py`.
+Experiments E1–E4 support two modes: evaluating the curriculum model directly (`train_models=False`) or running per-experiment training (`train_models=True`), controlled by `MODE` in `main.py`.
 
 ---
 
-### v4.0-action-smoothing
+### v4.0-action-smoothing ← current
 
-Adds an action smoothing penalty to the reward function on top of the v3.0 curriculum setup:
+Two changes compared to v3.0-curriculum:
 
 ```json
 "action_smoothing_scale": 0.16
 ```
 
-This penalizes large changes in action between consecutive steps, discouraging erratic movement and encouraging smoother, more committed trajectories. Several values were tested; `0.16` gave the best results and is the one used for the curriculum model.
+```python
+lr = linear_schedule(3e-4)
+```
 
-The curriculum used for the v4 results extends the v3 stage progression to 10 stages (N=0 -> N=2 -> N=3 -> ... -> N=13), with obstacle speed sampled from a range starting at stage 4 instead of a fixed value.
+The action smoothing penalty discourages erratic movement by penalizing large action changes between consecutive steps. Several values were tested; `0.16` gave the best results. The linear learning rate schedule decays the LR from 3e-4 to 0 over training, allowing larger updates early on and more conservative updates as the policy stabilizes.
 
-See [`results/RESULTS.md`](results/RESULTS.md) afor the full evaluation.
+The curriculum is the same 5-stage progression as v3 (N=0 -> N=3 -> N=3 -> N=6 -> N=10), unchanged. Total training is approximately 3 900 000 timesteps.
+
+These two changes together gave consistent gains of ~+20pp over v3 across all experiments, with collision rates dropping from 40–60% down to 15–45% depending on the configuration.
+
+See [`results/RESULTS.md`](results/RESULTS.md) for the full evaluation.
 
 ---
