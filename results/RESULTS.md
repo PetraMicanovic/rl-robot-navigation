@@ -24,10 +24,10 @@ Action smoothing adds a penalty for large action changes between consecutive ste
 | Network | MLP `[256, 256]` |
 | Observation space | 24 lidar rays, agent velocity, target direction, 3 nearest obstacle velocities |
 | Action space | Continuous velocity control |
-| Curriculum stages | 10 (N=0 → N=2 → N=3 → ... → N=13, with variable speed from stage 4) |
+| Curriculum stages | 5 (N=0 -> N=3 -> N=3 -> N=6 -> N=10) |
 | Action smoothing scale | 0.16 |
 | Learning rate | linear_schedule(3e-4) |
-| Total timesteps | ~ 6 300 000 |
+| Total timesteps | ~ 3 900 000 |
 
 ---
 
@@ -63,7 +63,7 @@ Evaluated at fixed N=6 across three speeds.
 
 ![E2 metrics](figures/e2_metrics.png)
 
-Performance is fairly stable across speeds — only about 6pp separates the best and worst conditions. Notably, speed=1.5 (75.5%) outperforms the training condition speed=1.0 (71.5%). This did not occur in v3. The margin is small enough that it could be noise, but it is worth monitoring in future runs. One possible explanation is that faster obstacles move far enough between steps to be more predictable to avoid, while speed=1.0 obstacles are in a regime where they are neither slow enough to wait out nor fast enough to simply sidestep.
+Performance is fairly stable across speeds — only about 6pp separates the best and worst conditions. Notably, speed=1.5 (75.5%) outperforms the training condition speed=1.0 (71.5%). This did not occur in v3. The diffrence is relatively small and should be verified with additional evaluation runs. A possible explanation is that fasterobstacles move farther between steps, making their future positions easier to anticipate. Speed=1.0 obstacles are in a regime where they are neither slow enough to wait out nor fast enough to simply sidestep.
 
 ![E2 training curves](figures/e2_training_curves.png)
 
@@ -89,7 +89,7 @@ All seven unseen configurations improved over v3, with gains between +14.0pp and
 
 The trend across configurations is clear: performance degrades with obstacle count more than with speed. The (5, 0.8) and (7, 1.0) configurations sit around 68–78%, while anything with N≥10 falls below 65% regardless of speed. This is consistent with E1 and suggests that density, not speed, is the harder dimension for the agent to handle.
 
-One outlier is N=9/speed=1.3, which gained only +14.0pp — the smallest improvement in the experiment. There is no obvious structural reason for this; it sits in the middle of the density range with a moderate speed. It may be noise, but it warrants attention if it appears again in future runs.
+One outlier is N=9/speed=1.3, which gained only +14.0pp — the smallest improvement in the experiment. There is no clear explanation for this result based on obstacle density or speed alone. Additional runs would be needed to determine whether the drop reflects random variation or a genuine weakness of the policy.
 
 ---
 
@@ -128,11 +128,11 @@ Speed has a smaller and less consistent effect than density. Across E1 and E2, v
 
 ### Generalization
 
-Generalization improved substantially from v3 to v4. In v3, out-of-distribution configurations dropped off sharply; here, the policy transfers reasonably to all seven tested configurations. The uniform size of the gains (+14–23pp) suggests this is not specific to any one condition. A likely contributor is the action smoothing, which discourages policies that rely on narrow, configuration-specific maneuvers — smoother trajectories tend to generalize better because they depend less on precise timing relative to obstacle positions. The LR schedule may help as well by reducing late-training overfitting to the curriculum's final stage distribution.
+Generalization improved substantially from v3 to v4. In v3, out-of-distribution configurations dropped off sharply; here, the policy transfers reasonably to all seven tested configurations. The uniform size of the gains (+14–23pp) suggests this is not specific to any one condition. The improvement may be partly explained by action smoothing, which encourages more stable trajectoriesand reduces reliance on highly specific avoidance maneuvers.  The LR schedule may help as well by reducing late-training overfitting to the curriculum's final stage distribution.
 
 ### Effect of reward shaping
 
-Reward shaping remains essential for good performance — the 43pp gap in E4 makes that clear. What changed in v4 is that the no-shaping baseline is no longer broken. Going from ~6% (v2, v3) to 28.5% (v4) means the agent can learn basic goal-directed behavior from the smoothing penalty alone, without any explicit reward for reaching the target. This is a useful property: it means future experiments that modify the shaping terms will be starting from a less degenerate baseline, making ablations easier to interpret.
+Reward shaping remains essential for good performance — the 43pp gap in E4 makes that clear. What changed in v4 is that the no-shaping baseline is no longer broken. Going from ~6% (v2, v3) to 28.5% (v4) means the agent can learn basic goal-directed behavior from the smoothing penalty alone, without any explicit reward for reaching the target. This result is useful for future experiments because the baseline without shaping is no longer near-random, making the effect of individual reward components easier to evaluate.
 
 ### Evolution from v2 to v4
 
@@ -140,7 +140,7 @@ v2 introduced the curriculum and the basic reward structure. Training was unstab
 
 v3 refined the curriculum and improved generalization considerably (N=15 reached 38.5%), but collision rates remained high and training without shaping was still broken. The policy showed signs of learning reactive avoidance but not coherent navigation.
 
-v4 addressed two issues: jittery movement (via action smoothing) and late-training instability (via the LR schedule). The combination pushed success rates up by ~20pp on average and, for the first time, produced a no-shaping baseline that learns something useful. The remaining gap — particularly at N≥10 — probably reflects a limitation of reactive policies on short rollout horizons rather than a reward engineering problem. Longer rollouts, richer observations, or more time spent at high densities during training are the natural next steps.
+v4 addressed two issues: jittery movement (via action smoothing) and late-training instability (via the LR schedule). The combination pushed success rates up by ~20pp on average and, for the first time, produced a no-shaping baseline that learns something useful. The remaining performance gap at N≥10 suggests that obstacle density has become the primary limitation. Further improvements will likely require changes beyond reward design alone. Longer rollouts, richer observations, or more time spent at high densities during training are the natural next steps.
 
 ---
 
@@ -153,6 +153,152 @@ v4 addressed two issues: jittery movement (via action smoothing) and late-traini
 | E3 | 78.5% | N=5, speed=0.8 | +19.0pp |
 | E4 | 71.5% | shaping, N=6, speed=1.0 | +20.0pp |
 
-v4 is the best version so far. Action smoothing (`scale=0.16`) and a linear LR schedule (3e-4 → 0) together gave ~+20pp over v3 across all experiments. Collision rates dropped from 40–60% in v3 to 15–45% depending on the configuration. The main open problem is performance at high obstacle densities (N≥10), where failure rates of 35–45% suggest the current setup is near its ceiling.
+v4 is the best version so far. Action smoothing (`scale=0.16`) and a linear LR schedule (3e-4 → 0) together gave ~+20pp over v3 across all experiments. Collision rates dropped from 40–60% in v3 to 15–45% depending on the configuration. The main limitation remains performance at high obstacle densities (N≥10), where failure rates are still between 35% and 45%. Future work should focus on improving robustness in these more constrained environments.
+
+---
+
+## Appendix — Trajectory Visualizations
+
+Each subsection shows representative trajectories for the corresponding experiment. For each configuration, three plot types are included: a single successful episode, a single collision episode, and an overview of multiple episodes. The overview plots give a sense of the variance in agent behavior across runs, while the individual episodes highlight specific success and failure modes.
+
+---
+
+### A1 — Obstacle density (E1)
+
+**N=3, speed=1.0**
+
+![Success trajectory N=3](trajectories/e1/trajectory_success_obs3_spd1.0.png)
+![Collision trajectory N=3](trajectories/e1/trajectory_collision_obs3_spd1.0.png)
+![Overview N=3](trajectories/e1/trajectories_overview_obs3_spd1.0.png)
+
+At low density, the agent navigates cleanly with wide clearance around obstacles. Collision episodes at N=3 tend to involve corner cases where an obstacle moves into the agent's path late in the episode rather than poor planning on the agent's part.
+
+---
+
+**N=6, speed=1.0 (training condition)**
+
+![Success trajectory N=6](trajectories/e1/trajectory_success_obs6_spd1.0.png)
+![Collision trajectory N=6](trajectories/e1/trajectory_collision_obs6_spd1.0.png)
+![Overview N=6](trajectories/e1/trajectories_overview_obs6_spd1.0.png)
+
+---
+
+**N=10, speed=1.0**
+
+![Success trajectory N=10](trajectories/e1/trajectory_success_obs10_spd1.0.png)
+![Collision trajectory N=10](trajectories/e1/trajectory_collision_obs10_spd1.0.png)
+![Overview N=10](trajectories/e1/trajectories_overview_obs10_spd1.0.png)
+
+At N=10, the agent's path becomes more constrained and reactive. Collision episodes show the agent getting caught between obstacles with no clear escape route — a pattern consistent with the argument that high density requires multi-step planning that the current policy does not fully support.
+
+---
+
+### A2 — Obstacle speed (E2)
+
+**speed=0.5**
+
+![Success trajectory spd=0.5](trajectories/e2/trajectory_success_obs6_spd0.5.png)
+![Collision trajectory spd=0.5](trajectories/e2/trajectory_collision_obs6_spd0.5.png)
+![Overview spd=0.5](trajectories/e2/trajectories_overview_obs6_spd0.5.png)
+
+---
+
+**speed=1.0 (training condition)**
+
+![Success trajectory spd=1.0](trajectories/e2/trajectory_success_obs6_spd1.0.png)
+![Collision trajectory spd=1.0](trajectories/e2/trajectory_collision_obs6_spd1.0.png)
+![Overview spd=1.0](trajectories/e2/trajectories_overview_obs6_spd1.0.png)
+
+---
+
+**speed=1.5**
+
+![Success trajectory spd=1.5](trajectories/e2/trajectory_success_obs6_spd1.5.png)
+![Collision trajectory spd=1.5](trajectories/e2/trajectory_collision_obs6_spd1.5.png)
+![Overview spd=1.5](trajectories/e2/trajectories_overview_obs6_spd1.5.png)
+
+Trajectory shapes across the three speeds are qualitatively similar, which is consistent with the small performance gap seen in E2. At speed=1.5, the agent's path tends to be slightly wider around obstacles, which may reflect that faster-moving obstacles are easier to commit to avoiding early.
+
+---
+
+### A3 — Generalization (E3, selected configurations)
+
+The full set of seven E3 configurations is shown below. The two hardest cases — N=12/speed=2.0 and N=15/speed=0.3 — are most informative for understanding where the policy begins to break down.
+
+**N=5, speed=0.8**
+
+![Success N=5](trajectories/e3/trajectory_success_obs5_spd0.8.png)
+![Collision N=5](trajectories/e3/trajectory_collision_obs5_spd0.8.png)
+![Overview N=5](trajectories/e3/trajectories_overview_obs5_spd0.8.png)
+
+---
+
+**N=7, speed=1.0**
+
+![Success N=7](trajectories/e3/trajectory_success_obs7_spd1.png)
+![Collision N=7](trajectories/e3/trajectory_collision_obs7_spd1.png)
+![Overview N=7](trajectories/e3/trajectories_overview_obs7_spd1.png)
+
+---
+
+**N=8, speed=1.2**
+
+![Success N=8](trajectories/e3/trajectory_success_obs8_spd1.2.png)
+![Collision N=8](trajectories/e3/trajectory_collision_obs8_spd1.2.png)
+![Overview N=8](trajectories/e3/trajectories_overview_obs8_spd1.2.png)
+
+---
+
+**N=9, speed=1.3**
+
+![Success N=9](trajectories/e3/trajectory_success_obs9_spd1.3.png)
+![Collision N=9](trajectories/e3/trajectory_collision_obs9_spd1.3.png)
+![Overview N=9](trajectories/e3/trajectories_overview_obs9_spd1.3.png)
+
+---
+
+**N=10, speed=1.5**
+
+![Success N=10](trajectories/e3/trajectory_success_obs10_spd1.5.png)
+![Collision N=10](trajectories/e3/trajectory_collision_obs10_spd1.5.png)
+![Overview N=10](trajectories/e3/trajectories_overview_obs10_spd1.5.png)
+
+---
+
+**N=12, speed=2.0**
+
+![Success N=12](trajectories/e3/trajectory_success_obs12_spd2.png)
+![Collision N=12](trajectories/e3/trajectory_collision_obs12_spd2.png)
+![Overview N=12](trajectories/e3/trajectories_overview_obs12_spd2.png)
+
+---
+
+**N=15, speed=0.3**
+
+![Success N=15](trajectories/e3/trajectory_success_obs15_spd0.3.png)
+![Collision N=15](trajectories/e3/trajectory_collision_obs15_spd0.3.png)
+![Overview N=15](trajectories/e3/trajectories_overview_obs15_spd0.3.png)
+
+At N=15, even successful episodes show the agent navigating through very tight gaps with little margin for error. Collision episodes at this density often involve the agent committing to a path that becomes blocked before it can course-correct — a failure mode that reactive policies are particularly susceptible to.
+
+---
+
+### A4 — Reward shaping (E4)
+
+**With shaping**
+
+![Success with shaping](trajectories/e4/trajectory_success_obs6_spd1.0_shaping.png)
+![Collision with shaping](trajectories/e4/trajectory_collision_obs6_spd1.0_shaping.png)
+![Overview with shaping](trajectories/e4/trajectories_overview_obs6_spd1.0_shaping.png)
+
+---
+
+**Without shaping**
+
+![Success without shaping](trajectories/e4/trajectory_success_obs6_spd1.0_no_shaping.png)
+![Collision without shaping](trajectories/e4/trajectory_collision_obs6_spd1.0_no_shaping.png)
+![Overview without shaping](trajectories/e4/trajectories_overview_obs6_spd1.0_no_shaping.png)
+
+The difference between the two variants is visible in the overview plots. The shaping variant produces more direct, consistent paths toward the goal. The no-shaping variant reaches the goal in successful episodes but the paths are noticeably less efficient and more erratic — the agent gets there, but not cleanly. This is consistent with the hypothesis that action smoothing alone provides enough signal to learn basic goal-directed behavior, but not enough to learn efficient navigation.
 
 ---
