@@ -167,9 +167,9 @@ Each subsection shows representative trajectories for the corresponding experime
 
 **N=3, speed=1.0**
 
-![Success trajectory N=3](trajectories/e1/trajectory_success_obs3_spd1.0.png)
-![Collision trajectory N=3](trajectories/e1/trajectory_collision_obs3_spd1.0.png)
-![Overview N=3](trajectories/e1/trajectories_overview_obs3_spd1.0.png)
+![Success trajectory N=3](figures/trajectories/e1/trajectory_success_obs3_spd1.0.png)
+![Collision trajectory N=3](figures/trajectories/e1/trajectory_collision_obs3_spd1.0.png)
+![Overview N=3](figures/trajectories/e1/trajectories_overview_obs3_spd1.0.png)
 
 At low density, the agent navigates cleanly with wide clearance around obstacles. Collision episodes at N=3 tend to involve corner cases where an obstacle moves into the agent's path late in the episode rather than poor planning on the agent's part.
 
@@ -177,17 +177,17 @@ At low density, the agent navigates cleanly with wide clearance around obstacles
 
 **N=6, speed=1.0 (training condition)**
 
-![Success trajectory N=6](trajectories/e1/trajectory_success_obs6_spd1.0.png)
-![Collision trajectory N=6](trajectories/e1/trajectory_collision_obs6_spd1.0.png)
-![Overview N=6](trajectories/e1/trajectories_overview_obs6_spd1.0.png)
+![Success trajectory N=6](figures/trajectories/e1/trajectory_success_obs6_spd1.0.png)
+![Collision trajectory N=6](figures/trajectories/e1/trajectory_collision_obs6_spd1.0.png)
+![Overview N=6](figures/trajectories/e1/trajectories_overview_obs6_spd1.0.png)
 
 ---
 
 **N=10, speed=1.0**
 
-![Success trajectory N=10](trajectories/e1/trajectory_success_obs10_spd1.0.png)
-![Collision trajectory N=10](trajectories/e1/trajectory_collision_obs10_spd1.0.png)
-![Overview N=10](trajectories/e1/trajectories_overview_obs10_spd1.0.png)
+![Success trajectory N=10](figures/trajectories/e1/trajectory_success_obs10_spd1.0.png)
+![Collision trajectory N=10](figures/trajectories/e1/trajectory_collision_obs10_spd1.0.png)
+![Overview N=10](figures/trajectories/e1/trajectories_overview_obs10_spd1.0.png)
 
 At N=10, the agent's path becomes more constrained and reactive. Collision episodes show the agent getting caught between obstacles with no clear escape route — a pattern consistent with the argument that high density requires multi-step planning that the current policy does not fully support.
 
@@ -197,25 +197,25 @@ At N=10, the agent's path becomes more constrained and reactive. Collision episo
 
 **speed=0.5**
 
-![Success trajectory spd=0.5](trajectories/e2/trajectory_success_obs6_spd0.5.png)
-![Collision trajectory spd=0.5](trajectories/e2/trajectory_collision_obs6_spd0.5.png)
-![Overview spd=0.5](trajectories/e2/trajectories_overview_obs6_spd0.5.png)
+![Success trajectory spd=0.5](figures/trajectories/e2/trajectory_success_obs6_spd0.5.png)
+![Collision trajectory spd=0.5](figures/trajectories/e2/trajectory_collision_obs6_spd0.5.png)
+![Overview spd=0.5](figures/trajectories/e2/trajectories_overview_obs6_spd0.5.png)
 
 ---
 
 **speed=1.0 (training condition)**
 
-![Success trajectory spd=1.0](trajectories/e2/trajectory_success_obs6_spd1.0.png)
-![Collision trajectory spd=1.0](trajectories/e2/trajectory_collision_obs6_spd1.0.png)
-![Overview spd=1.0](trajectories/e2/trajectories_overview_obs6_spd1.0.png)
+![Success trajectory spd=1.0](figures/trajectories/e2/trajectory_success_obs6_spd1.0.png)
+![Collision trajectory spd=1.0](figures/trajectories/e2/trajectory_collision_obs6_spd1.0.png)
+![Overview spd=1.0](figures/trajectories/e2/trajectories_overview_obs6_spd1.0.png)
 
 ---
 
 **speed=1.5**
 
-![Success trajectory spd=1.5](trajectories/e2/trajectory_success_obs6_spd1.5.png)
-![Collision trajectory spd=1.5](trajectories/e2/trajectory_collision_obs6_spd1.5.png)
-![Overview spd=1.5](trajectories/e2/trajectories_overview_obs6_spd1.5.png)
+![Success trajectory spd=1.5](figures/trajectories/e2/trajectory_success_obs6_spd1.5.png)
+![Collision trajectory spd=1.5](figures/trajectories/e2/trajectory_collision_obs6_spd1.5.png)
+![Overview spd=1.5](figures/trajectories/e2/trajectories_overview_obs6_spd1.5.png)
 
 Trajectory shapes across the three speeds are qualitatively similar, which is consistent with the small performance gap seen in E2. At speed=1.5, the agent's path tends to be slightly wider around obstacles, which may reflect that faster-moving obstacles are easier to commit to avoiding early.
 
@@ -227,57 +227,57 @@ The full set of seven E3 configurations is shown below. The two hardest cases �
 
 **N=5, speed=0.8**
 
-![Success N=5](trajectories/e3/trajectory_success_obs5_spd0.8.png)
-![Collision N=5](trajectories/e3/trajectory_collision_obs5_spd0.8.png)
-![Overview N=5](trajectories/e3/trajectories_overview_obs5_spd0.8.png)
+![Success N=5](figures/trajectories/e3/trajectory_success_obs5_spd0.8.png)
+![Collision N=5](figures/trajectories/e3/trajectory_collision_obs5_spd0.8.png)
+![Overview N=5](figures/trajectories/e3/trajectories_overview_obs5_spd0.8.png)
 
 ---
 
 **N=7, speed=1.0**
 
-![Success N=7](trajectories/e3/trajectory_success_obs7_spd1.png)
-![Collision N=7](trajectories/e3/trajectory_collision_obs7_spd1.png)
-![Overview N=7](trajectories/e3/trajectories_overview_obs7_spd1.png)
+![Success N=7](figures/trajectories/e3/trajectory_success_obs7_spd1.png)
+![Collision N=7](figures/trajectories/e3/trajectory_collision_obs7_spd1.png)
+![Overview N=7](figures/trajectories/e3/trajectories_overview_obs7_spd1.png)
 
 ---
 
 **N=8, speed=1.2**
 
-![Success N=8](trajectories/e3/trajectory_success_obs8_spd1.2.png)
-![Collision N=8](trajectories/e3/trajectory_collision_obs8_spd1.2.png)
-![Overview N=8](trajectories/e3/trajectories_overview_obs8_spd1.2.png)
+![Success N=8](figures/trajectories/e3/trajectory_success_obs8_spd1.2.png)
+![Collision N=8](figures/trajectories/e3/trajectory_collision_obs8_spd1.2.png)
+![Overview N=8](figures/trajectories/e3/trajectories_overview_obs8_spd1.2.png)
 
 ---
 
 **N=9, speed=1.3**
 
-![Success N=9](trajectories/e3/trajectory_success_obs9_spd1.3.png)
-![Collision N=9](trajectories/e3/trajectory_collision_obs9_spd1.3.png)
-![Overview N=9](trajectories/e3/trajectories_overview_obs9_spd1.3.png)
+![Success N=9](figures/trajectories/e3/trajectory_success_obs9_spd1.3.png)
+![Collision N=9](figures/trajectories/e3/trajectory_collision_obs9_spd1.3.png)
+![Overview N=9](figures/trajectories/e3/trajectories_overview_obs9_spd1.3.png)
 
 ---
 
 **N=10, speed=1.5**
 
-![Success N=10](trajectories/e3/trajectory_success_obs10_spd1.5.png)
-![Collision N=10](trajectories/e3/trajectory_collision_obs10_spd1.5.png)
-![Overview N=10](trajectories/e3/trajectories_overview_obs10_spd1.5.png)
+![Success N=10](figures/trajectories/e3/trajectory_success_obs10_spd1.5.png)
+![Collision N=10](figures/trajectories/e3/trajectory_collision_obs10_spd1.5.png)
+![Overview N=10](figures/trajectories/e3/trajectories_overview_obs10_spd1.5.png)
 
 ---
 
 **N=12, speed=2.0**
 
-![Success N=12](trajectories/e3/trajectory_success_obs12_spd2.png)
-![Collision N=12](trajectories/e3/trajectory_collision_obs12_spd2.png)
-![Overview N=12](trajectories/e3/trajectories_overview_obs12_spd2.png)
+![Success N=12](figures/trajectories/e3/trajectory_success_obs12_spd2.png)
+![Collision N=12](figures/trajectories/e3/trajectory_collision_obs12_spd2.png)
+![Overview N=12](figures/trajectories/e3/trajectories_overview_obs12_spd2.png)
 
 ---
 
 **N=15, speed=0.3**
 
-![Success N=15](trajectories/e3/trajectory_success_obs15_spd0.3.png)
-![Collision N=15](trajectories/e3/trajectory_collision_obs15_spd0.3.png)
-![Overview N=15](trajectories/e3/trajectories_overview_obs15_spd0.3.png)
+![Success N=15](figures/trajectories/e3/trajectory_success_obs15_spd0.3.png)
+![Collision N=15](figures/trajectories/e3/trajectory_collision_obs15_spd0.3.png)
+![Overview N=15](figures/trajectories/e3/trajectories_overview_obs15_spd0.3.png)
 
 At N=15, even successful episodes show the agent navigating through very tight gaps with little margin for error. Collision episodes at this density often involve the agent committing to a path that becomes blocked before it can course-correct — a failure mode that reactive policies are particularly susceptible to.
 
@@ -287,17 +287,17 @@ At N=15, even successful episodes show the agent navigating through very tight g
 
 **With shaping**
 
-![Success with shaping](trajectories/e4/trajectory_success_obs6_spd1.0_shaping.png)
-![Collision with shaping](trajectories/e4/trajectory_collision_obs6_spd1.0_shaping.png)
-![Overview with shaping](trajectories/e4/trajectories_overview_obs6_spd1.0_shaping.png)
+![Success with shaping](figures/trajectories/e4/trajectory_success_obs6_spd1.0_shaping.png)
+![Collision with shaping](figures/trajectories/e4/trajectory_collision_obs6_spd1.0_shaping.png)
+![Overview with shaping](figures/trajectories/e4/trajectories_overview_obs6_spd1.0_shaping.png)
 
 ---
 
 **Without shaping**
 
-![Success without shaping](trajectories/e4/trajectory_success_obs6_spd1.0_no_shaping.png)
-![Collision without shaping](trajectories/e4/trajectory_collision_obs6_spd1.0_no_shaping.png)
-![Overview without shaping](trajectories/e4/trajectories_overview_obs6_spd1.0_no_shaping.png)
+![Success without shaping](figures/trajectories/e4/trajectory_success_obs6_spd1.0_no_shaping.png)
+![Collision without shaping](figures/trajectories/e4/trajectory_collision_obs6_spd1.0_no_shaping.png)
+![Overview without shaping](figures/trajectories/e4/trajectories_overview_obs6_spd1.0_no_shaping.png)
 
 The difference between the two variants is visible in the overview plots. The shaping variant produces more direct, consistent paths toward the goal. The no-shaping variant reaches the goal in successful episodes but the paths are noticeably less efficient and more erratic — the agent gets there, but not cleanly. This is consistent with the hypothesis that action smoothing alone provides enough signal to learn basic goal-directed behavior, but not enough to learn efficient navigation.
 
